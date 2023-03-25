@@ -21,7 +21,7 @@ Player getPlayerInfoEffect()
     setCursor(1);
     cin >> p.name;
     setCursor(0);
-
+    
     clearConsole();
     setColor(11);
     gotoxy(midWidth - 7, midHeight + 2);
