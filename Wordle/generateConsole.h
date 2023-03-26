@@ -3,8 +3,8 @@
 
 #define windowHeight 780
 #define windowWidth 900
-#define gameHeight 33
-#define gameWidth 79
+#define gameHeight 35
+#define gameWidth 87
 #define midHeight 15
 #define midWidth 40
 #define UP 72
@@ -25,3 +25,5 @@ void changeBarStatus(int barX, int barY, int bColor, int tColor);
 int getConsoleInput();
 int generateMenu();
 void clearConsole();
+void changePlayBarStatus(int barX, int barY, int bColor, int tColor);
+int showPlayMenu();

@@ -17,6 +17,12 @@ void setWindowSizeAndPos()
 
     // Set the position and size for the window
     MoveWindow(console1, 350, 100, windowWidth, windowHeight, TRUE);
+    RECT rectWindow;
+    // Set the window center
+    GetClientRect(console1, &rectWindow);
+    int xPos = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
+    int yPos = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
+    MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, FALSE);
 }
 
 void setCursor(int mode)
@@ -69,8 +75,20 @@ void drawGraph(int delayTime)
 
 void drawTitle()
 {
-    int x = gameWidth / 2;
-    int y = gameHeight;
+    int x = gameWidth / 4 - 15;
+    int y = gameHeight / 4;
+    gotoxy(x, y);
+    cout << "~77:   .77!   :7777777.  :77777777!   ~7777777     !77.        :777777777?^";
+    gotoxy(x, y + 1);
+    cout << "P@@! . .&@&..5#@?!7!Y@G? 7@@B!7!!B@P~ 5@@5!!5&G7. .#@@^        ~@@#";
+    gotoxy(x, y + 2);
+    cout << "P@@J7&Y7&@#..&@&.   !@@P 7@@P   ~G@@7 5@@7   :&@#: #@&^        ~@@B!!!!!~~~";
+    gotoxy(x, y + 3);
+    cout << "P@@@@&@@@@#..&@&.   !@@P 7@@#Y5G@577: 5@@7   :&@&: #@&:        ~@@B77777!!!";
+    gotoxy(x, y + 4);
+    cout << "P@@B5:?B@@&..5#@7~!~J@BJ 7@@G:5#@&G~. 5@@5~~5&G?. .#@@?~!!!!!~ ~@@B";
+    gotoxy(x, y + 5);
+    cout << "!??:   .??7.  ^???????.  ^??!  .???J^ ~???????     7?????????7 :?????????J^^";
 }
 
 void generateGraphic()
@@ -130,7 +148,7 @@ int getConsoleInput()
 
 int generateMenu()
 {
-    int barX = midWidth - 12, barY = midHeight + 6;
+    int barX = midWidth - 9, barY = midHeight + 6;
     int moveY = barY, oldY = barY;
 
     for (int i = barY; i <= barY + 2 * 3; i += 2)
@@ -195,6 +213,83 @@ void clearConsole()
         {
             gotoxy(j, i);
             cout << " ";
+        }
+    }
+}
+
+void changePlayBarStatus(int barX, int barY, int bColor, int tColor)
+{
+    setColor(bColor * 16 + tColor);
+
+    if (barY == 21)
+    {
+        gotoxy(barX, barY);
+        cout << "          EASY          ";
+    }
+    else if (barY == 23)
+    {
+        gotoxy(barX, barY);
+        cout << "          HARD          ";
+    }
+    else if (barY == 25)
+    {
+        gotoxy(barX, barY);
+        cout << "          BACK          ";
+    }
+}
+
+int showPlayMenu()
+{
+    int barX = midWidth - 9, barY = midHeight + 6;
+    int moveY = barY, oldY = barY;
+
+    for (int i = barY; i <= barY + 2 * 2; i += 2)
+        changePlayBarStatus(barX, i, 0, 7);
+
+    bool check = true;
+    int input;
+    while (true)
+    {
+        if (check == true)
+        {
+            changePlayBarStatus(barX, oldY, 0, 7);
+            oldY = moveY;
+
+            changePlayBarStatus(barX, moveY, 6, 13); // Highlight the selected bar
+            check = false;
+        }
+
+        switch (getConsoleInput())
+        {
+        case 1:
+        {
+            check = true;
+            if (moveY != barY)
+                moveY -= 2;
+            else
+                moveY = barY + 2 * 2;
+            break;
+        }
+        case 2:
+        {
+            check = true;
+            if (moveY != barY + 2 * 2)
+                moveY += 2;
+            else
+                moveY = barY;
+            break;
+        }
+        case 5:
+        {
+            if (moveY == 25) // If "BACK" is selected
+                return 0;
+            else if (moveY == 21) // If "EASY" is selected
+                return 1;
+            else if (moveY == 23) // If "LEADERBOARD" is selected
+                return 2;
+        }
+        default:
+            break;
         }
     }
 }

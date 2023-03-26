@@ -15,7 +15,17 @@ int main()
     {
         clearConsole();
         Player p = getPlayerInfoEffect();
-        easyMode(p);
+        clearConsole();
+        switch (showPlayMenu())
+        {
+        case 0:
+            break;
+        case 1:
+            clearConsole();
+            easyMode(p);
+        case 2: 
+            break;
+        }
         break;
     }
     case 2:
