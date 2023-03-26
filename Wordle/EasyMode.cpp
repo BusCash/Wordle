@@ -1,4 +1,4 @@
-#include "EasyMode.h"
+﻿#include "EasyMode.h"
 
 void generateBoard(Board_1** board)
 {
@@ -15,6 +15,18 @@ void generateBoard(Board_1** board)
             board[i][j].cx = board[i][j].x + 2;
             board[i][j].cy = board[i][j].y + 1;
         }
+    }
+
+    // Set the edge unavailable
+    for (int i = 0; i < boardHeight; i++)
+    {
+        board[i][0].isValid = false;
+        board[i][boardWidth - 1].isValid = false;
+    }
+    for (int j = 0; j < boardWidth; j++)
+    {
+        board[0][j].isValid = false;
+        board[boardHeight - 1][j].isValid = false;
     }
 
     // Get random character for each 2 cells
@@ -103,11 +115,6 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2)
 {
     // Check all way in a rectangle created by p1 and p2
     Position jmin, jmax;
-    jmin.x = i2;
-    jmin.y = j2;
-    jmax.x = i1;
-    jmax.y = j1;
-
     if (j1 < j2)
     {
         jmin.x = i1;
@@ -115,18 +122,20 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2)
         jmax.x = i2;
         jmax.y = j2;
     }
+    else
+    {
+        jmin.x = i2;
+        jmin.y = j2;
+        jmax.x = i1;
+        jmax.y = j1;
+    }
 
     // Check every cols in the rectangle except the rightmost
     for (int j = jmin.y + 1; j < jmax.y; j++)
-        if (checkRowMatch(board, jmin.y, j + 1, jmin.x) && checkColMatch(board, jmin.x, jmax.x + 1, j) && checkRowMatch(board, j, jmax.y, jmax.x))
+        if (checkRowMatch(board, jmin.y, j + 1, jmin.x) && checkColMatch(board, jmin.x, jmax.x + (jmax.x > jmin.x) ? 1 : -1, j) && checkRowMatch(board, j, jmax.y, jmax.x))
             return true;
 
     Position imin, imax;
-    imin.x = i2;
-    imin.y = j2;
-    imax.x = i1;
-    imax.y = j1;
-
     if (i1 < i2)
     {
         imin.x = i1;
@@ -134,10 +143,17 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2)
         imax.x = i2;
         imax.y = j2;
     }
+    else
+    {
+        imin.x = i2;
+        imin.y = j2;
+        imax.x = i1;
+        imax.y = j1;
+    }
 
     // Check every rows in the rectangle except the topmost
     for (int i = imin.x + 1; i < imax.x; i++)
-        if (checkColMatch(board, imin.x, i + 1, imin.y) && checkRowMatch(board, imin.y, imax.y + 1, i) && checkColMatch(board, i, imax.x, imax.y))
+        if (checkColMatch(board, imin.x, i + 1, imin.y) && checkRowMatch(board, imin.y, imax.y + (imax.y > imin.y) ? 1 : -1, i) && checkColMatch(board, i, imax.x, imax.y))
             return true;
 
     return false;
@@ -147,13 +163,7 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
 {
     int downright = 1, upleft = -1;
 
-    // Check horizontal direction ==============================================
     Position jmin, jmax;
-    jmin.x = i2;
-    jmin.y = j2;
-    jmax.x = i1;
-    jmax.y = j1;
-
     if (j1 < j2)
     {
         jmin.x = i1;
@@ -161,12 +171,19 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
         jmax.x = i2;
         jmax.y = j2;
     }
+    else
+    {
+        jmin.x = i2;
+        jmin.y = j2;
+        jmax.x = i1;
+        jmax.y = j1;
+    }
 
     // Check right direction
-    if (checkRowMatch(board, jmin.y, jmax.y, jmin.x))
+    if (checkRowMatch(board, jmin.y, jmax.y + 1, jmin.x))
     {
         int jnext = jmax.y + downright;
-        while (jnext <= easyWidth + 1 && board[jmin.x][jnext].c != ' ' && board[jmax.x][jnext].c != ' ')
+        while (jnext <= easyWidth + 1 && board[jmin.x][jnext].c == ' ' && board[jmax.x][jnext].c == ' ')
         {
             if (checkColMatch(board, jmin.x, jmax.x, jnext))
                 return true;
@@ -175,10 +192,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     }
 
     // Check the left direction
-    if (checkRowMatch(board, jmax.y, jmin.y, jmax.x))
+    if (checkRowMatch(board, jmax.y, jmin.y - 1, jmax.x))
     {
         int jnext = jmin.y + upleft;
-        while (jnext >= 0 && board[jmin.x][jnext].c != ' ' && board[jmax.x][jnext].c != ' ')
+        while (jnext >= 0 && board[jmin.x][jnext].c == ' ' && board[jmax.x][jnext].c == ' ')
         {
             if (checkColMatch(board, jmin.x, jmax.x, jnext))
                 return true;
@@ -186,13 +203,7 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
         }
     }
 
-    // Check vertical direction ================================================
     Position imin, imax;
-    imin.x = i2;
-    imin.y = j2;
-    imax.x = i1;
-    imax.y = j1;
-
     if (i1 < i2)
     {
         imin.x = i1;
@@ -200,12 +211,19 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
         imax.x = i2;
         imax.y = j2;
     }
+    else
+    {
+        imin.x = i2;
+        imin.y = j2;
+        imax.x = i1;
+        imax.y = j1;
+    }
 
     // Check down direction
-    if (checkColMatch(board, imin.x, imax.x, imin.y))
+    if (checkColMatch(board, imin.x, imax.x + 1, imin.y))
     {
         int inext = imax.x + downright;
-        while (inext <= easyHeight + 1 && board[inext][imin.y].c != ' ' && board[inext][imax.y].c != ' ')
+        while (inext <= easyHeight + 1 && board[inext][imin.y].c == ' ' && board[inext][imax.y].c == ' ')
         {
             if (checkRowMatch(board, imin.y, imax.y, inext))
                 return true;
@@ -214,10 +232,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     }
 
     // Check up direction
-    if (checkColMatch(board, imax.x, imin.x, imax.y))
+    if (checkColMatch(board, imax.x, imin.x - 1, imax.y))
     {
         int inext = imin.x + upleft;
-        while (inext >= 0 && board[inext][imin.y].c != ' ' && board[inext][imax.y].c != ' ')
+        while (inext >= 0 && board[inext][imin.y].c == ' ' && board[inext][imax.y].c == ' ')
         {
             if (checkRowMatch(board, imin.y, imax.y, inext))
                 return true;
@@ -296,24 +314,26 @@ void processAction(Board_1** cell)
     int selectedCount = 2;
 
     cell[i][j].isStopped = true;
-
+    // lỗi chọn 1 ô 2 lần, chọn 1 ô đi vào lại thì mất
     while (true)
     {
+        // If standing at a cell
         if (cell[i][j].isStopped)
         {
             gotoxy(1, 3);
             cout << i << "," << j;
-            cell[oldi][oldj].drawCell();
+            cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
             oldi = i;
             oldj = j;
 
-            cell[i][j].drawCell();
+            cell[i][j].drawCell(); // Set the current standing cell
             cell[i][j].isStopped = false;
         }
 
+        // If a cell is selected
         if (cell[i][j].isSelected)
         {
-            cell[i][j].drawCell();
+            cell[i][j].drawCell(); // Set the selected cell
 
             if (selectedCount == 2)
             {
@@ -323,24 +343,28 @@ void processAction(Board_1** cell)
 
             selectedCount--;
 
+            // If 2 cells are selected
             if (selectedCount == 0)
             {
                 cell[iselected][jselected].isSelected = false;
                 cell[i][j].isSelected = false;
                 selectedCount = 2;
-                gotoxy(1, 2);
-                cout << cell[iselected][jselected].c << " " << cell[i][j].c;
 
                 if (checkMatch(cell, iselected, jselected, i, j))
                 {
                     cell[iselected][jselected].deleteCell();
                     cell[i][j].deleteCell();
 
-                    cell[iselected][jselected].isValid = false;
-                    cell[i][j].isValid = false;
+                    cell[iselected][jselected].c = ' ';
+                    cell[i][j].c = ' ';
                 }
                 else
+                {
+                    cell[iselected][jselected].isValid = true;
+                    cell[i][j].isValid = true;
+
                     cell[iselected][jselected].drawCell();
+                }
                 cell[i][j].isStopped = true;
                 cell[i][j].drawCell();
                 cell[i][j].isStopped = false;
@@ -354,8 +378,19 @@ void processAction(Board_1** cell)
             if (i == 1)
                 i = easyHeight;
             else
-                i -= 1;
+            {
+                do
+                {
+                    i--;
+                    if (i == 0)
+                    {
+                        i = easyHeight; // dự định làm checkValid theo I và J
+                    }
+
+                } while (i > 0 && !cell[i][j].isValid);
+            }
             cell[i][j].isStopped = true;
+
             break;
         }
         case 2:
@@ -388,7 +423,10 @@ void processAction(Board_1** cell)
         case 5:
         {
             if (cell[i][j].isSelected == false && cell[i][j].isValid == true)
+            {
                 cell[i][j].isSelected = true;
+                cell[i][j].isValid = false;
+            }
             break;
         }
         default:
@@ -404,7 +442,6 @@ void easyMode(Player& p)
     Board_1** board = new Board_1 * [gameHeight];
     generateBoard(board);
     displayBoard(board);
-    gotoxy(1, 1);
     processAction(board);
     deleteBoard(board);
 }

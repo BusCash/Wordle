@@ -6,6 +6,7 @@ int main()
 {
     generateWindow();
     generateGraphic();
+    Player p;
 
     switch (generateMenu())
     {
@@ -14,15 +15,15 @@ int main()
     case 1:
     {
         clearConsole();
-        Player p = getPlayerInfoEffect();
-        clearConsole();
         switch (showPlayMenu())
         {
         case 0:
             break;
         case 1:
-            clearConsole();
+            clearConsole(); 
+            p = getPlayerInfoEffect();
             easyMode(p);
+            break;
         case 2: 
             break;
         }

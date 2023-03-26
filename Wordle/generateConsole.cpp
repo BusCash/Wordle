@@ -14,15 +14,14 @@ void gotoxy(int x, int y)
 void setWindowSizeAndPos()
 {
     HWND console1 = GetForegroundWindow();
-
-    // Set the position and size for the window
-    MoveWindow(console1, 350, 100, windowWidth, windowHeight, TRUE);
     RECT rectWindow;
-    // Set the window center
+
     GetClientRect(console1, &rectWindow);
     int xPos = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
     int yPos = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
-    MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, FALSE);
+
+    // Set the position and size for the window
+    MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, TRUE);
 }
 
 void setCursor(int mode)
@@ -88,40 +87,13 @@ void drawTitle()
     gotoxy(x, y + 4);
     cout << "P@@B5:?B@@&..5#@7~!~J@BJ 7@@G:5#@&G~. 5@@5~~5&G?. .#@@?~!!!!!~ ~@@B";
     gotoxy(x, y + 5);
-    cout << "!??:   .??7.  ^???????.  ^??!  .???J^ ~???????     7?????????7 :?????????J^^";
+    cout << "!??:   .??7.  ^???????.  ^??!  .???J^ ~???????     7?????????7 :?????????J^";
 }
 
 void generateGraphic()
 {
     drawGraph(5);
     drawTitle();
-}
-
-void changeBarStatus(int barX, int barY, int bColor, int tColor)
-{
-    setColor(bColor * 16 + tColor);
-
-    if (barY == 21)
-    {
-        gotoxy(barX, barY);
-        cout << "          PLAY          ";
-    }
-    else if (barY == 23)
-    {
-        gotoxy(barX, barY);
-        cout << "       LEADERBOARD      ";
-    }
-    else if (barY == 25)
-    {
-        gotoxy(barX, barY);
-        cout << "         CREDITS        ";
-    }
-    else if (barY == 27)
-    {
-        gotoxy(barX, barY);
-        cout << "          QUIT          ";
-    }
-    setColor(7);
 }
 
 int getConsoleInput()
@@ -141,18 +113,39 @@ int getConsoleInput()
     }
     else
     {
-        if (key == ENTER)
+        if (key == ENTER || key == SPACEBAR)
             return 5;
     }
 }
 
+
+void changeBarStatus(int barX, int barY, int moveY, string s, int bColor, int tColor)
+{
+    setColor(bColor * 16 + tColor);
+
+    if (moveY == barY)
+    {
+        gotoxy(barX, barY);
+        cout << "                        ";
+        gotoxy(barX + 12 - s.length() / 2, barY);
+        cout << s;
+    }
+
+    setColor(7);
+}
+
 int generateMenu()
 {
-    int barX = midWidth - 9, barY = midHeight + 6;
+    int barX = midWidth - 12, barY = midHeight + 6;
     int moveY = barY, oldY = barY;
 
     for (int i = barY; i <= barY + 2 * 3; i += 2)
-        changeBarStatus(barX, i, 0, 7);
+    {
+        changeBarStatus(barX, 21, i, "PLAY", 0, 7);
+        changeBarStatus(barX, 23, i, "LEADERBOARD", 0, 7);
+        changeBarStatus(barX, 25, i, "CREDITS", 0, 7);
+        changeBarStatus(barX, 27, i, "QUIT", 0, 7);
+    }
 
     bool check = true;
     int input;
@@ -160,10 +153,17 @@ int generateMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, oldY, 0, 7);
+            changeBarStatus(barX, 21, oldY, "PLAY", 0, 7);
+            changeBarStatus(barX, 23, oldY, "LEADERBOARD", 0, 7);
+            changeBarStatus(barX, 25, oldY, "CREDITS", 0, 7);
+            changeBarStatus(barX, 27, oldY, "QUIT", 0, 7);
             oldY = moveY;
 
-            changeBarStatus(barX, moveY, 6, 13); // Highlight the selected bar
+            // Highlight the selected bar
+            changeBarStatus(barX, 21, oldY, "PLAY", 6, 13);
+            changeBarStatus(barX, 23, oldY, "LEADERBOARD", 6, 13);
+            changeBarStatus(barX, 25, oldY, "CREDITS", 6, 13);
+            changeBarStatus(barX, 27, oldY, "QUIT", 6, 13);
             check = false;
         }
 
