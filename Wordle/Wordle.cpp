@@ -23,7 +23,7 @@ int main()
     case 3:
         break;
     }
-
+    cout << "hello0";
     _getch();
     return 0;
 }
