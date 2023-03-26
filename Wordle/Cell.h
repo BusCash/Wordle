@@ -6,10 +6,12 @@
 #include <windows.h>
 #include <conio.h>
 
-#define easyHeight 5
-#define easyWidth 6
+#define boardHeight 6
+#define boardWidth 9
+#define easyHeight 4
+#define easyWidth 7
 #define cellHeight 3
-#define cellWidth 8
+#define cellWidth 6
 
 using namespace std;
 
@@ -29,7 +31,9 @@ struct Board_1
 {
     int x, y;
     char c = ' ';
+    int cx, cy;
 
+    bool isStopped = false;
     bool isSelected = false;
     bool isValid = true;
 
