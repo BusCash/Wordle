@@ -22,7 +22,7 @@ void setColor(int textColor);
 void drawGraph(int delayTime);
 void drawTitle();
 void generateGraphic();
-void changeBarStatus(int barX, int barY, int moveY, string s, int bColor, int tColor);
+void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int tColor);
 int getConsoleInput();
 int generateMenu();
 void clearConsole();
