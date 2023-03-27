@@ -265,18 +265,6 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2)
     return false;
 }
 
-bool checkValid(Board_1** cell, int i, int j)
-{
-    for (int row = 1; row < easyHeight + 1; row++)
-        if (!cell[row][j].isValid)
-            return false;
-
-    for (int col = 1; col < easyWidth + 1; col++)
-        if (!cell[i][col].isValid)
-            return false;
-    return true;
-}
-
 void processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected)
 {
     cell[i][j].drawCell(); // Set the selected cell
