@@ -1,6 +1,7 @@
 #include "generateConsole.h"
 #include "EasyMode.h"
 #include "PlayerInfo.h"
+#include "Leaderboard.h"
 
 int main()
 {
@@ -14,14 +15,14 @@ int main()
     case 1:
     {
         clearConsole();
-        Player p = getPlayerInfoEffect();
-        clearConsole();
+        Player p;
         switch (showPlayMenu())
         {
         case 0:
             break;
         case 1:
-            clearConsole();
+            clearConsole();                       
+            p = getPlayerInfoEffect();
             easyMode(p);
         case 2: 
             break;
@@ -29,11 +30,21 @@ int main()
         break;
     }
     case 2:
-        break;
-    case 3:
+    {
+        Record player[100];
+        clearConsole();
+        showLeaderboard();
+        //printLeaderboard();
         break;
     }
-    cout << "hello0";
+    case 3:
+        clearConsole();
+        showCredit();
+        int key = _getch();
+        if (key == ENTER)
+        break;
+    }
+    //cout << "hello0";
     _getch();
     return 0;
 }

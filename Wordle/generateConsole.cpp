@@ -293,3 +293,21 @@ int showPlayMenu()
         }
     }
 }
+
+void showCredit()
+{
+    gotoxy(midWidth - 9, midHeight + 6);
+    cout << "22127126 - Nguyen Duy Hoang";
+    gotoxy(midWidth - 9, midHeight + 7);
+    cout << " 22127405 - Tran Minh Thu";
+    gotoxy(midWidth - 2, midHeight + 8);
+    cout << "Class: 22CLC08";
+    gotoxy(midWidth - 18, midHeight + 9);
+    cout << "Instructors: Bui Huy Thong - Tran Thi Thao Nhi";
+    gotoxy(midWidth - 9, midHeight + 10);
+    setColor(109);   
+    int barX = midWidth - 9, barY = midHeight + 11;
+    gotoxy(barX, barY);
+    cout << "          QUIT          ";
+}
+

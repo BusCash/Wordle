@@ -27,3 +27,4 @@ int generateMenu();
 void clearConsole();
 void changePlayBarStatus(int barX, int barY, int bColor, int tColor);
 int showPlayMenu();
+void showCredit();
