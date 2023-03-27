@@ -6,34 +6,37 @@ int main()
 {
     generateWindow();
     generateGraphic();
-    Player p;
 
-    switch (generateMenu())
+    Player p;
+    bool quit = false;
+    while (!quit)
     {
-    case 0:
-        break;
-    case 1:
-    {
-        clearConsole();
-        switch (showPlayMenu())
+        switch (generateMenu())
         {
         case 0:
+            quit = true;
             break;
         case 1:
-            clearConsole(); 
-            p = getPlayerInfoEffect();
-            easyMode(p);
-            break;
-        case 2: 
+        {
+            switch (showPlayMenu())
+            {
+            case 0:
+                break;
+            case 1:
+                clearConsole(); 
+                p = getPlayerInfoEffect();
+                easyMode(p);
+                break;
+            case 2: 
+                break;
+            }
             break;
         }
-        break;
+        case 2:
+            break;
+        case 3:
+            break;
+        }
     }
-    case 2:
-        break;
-    case 3:
-        break;
-    }
-    _getch();
     return 0;
 }
