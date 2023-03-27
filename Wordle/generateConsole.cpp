@@ -21,7 +21,7 @@ void setWindowSizeAndPos()
     int yPos = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
 
     // Set the position and size for the window
-    MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, TRUE);
+    MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, FALSE);
 }
 
 void setCursor(int mode)
