@@ -251,58 +251,66 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2)
     if (board[i1][j1].c == board[i2][j2].c)
     {
         if (checkIMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout
-                << "I match";
             return true;
-        }
-        else
-        {
-            gotoxy(1, 4);
-            cout << "no I match";
-        }
-        if (checkLMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "L match";
-            return true;
-        }
-        else
-        {
-            gotoxy(1, 5);
-            cout << "no L match";
-        }
-        if (checkZMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "Z match";
-            return true;
-        }
 
-        else
-        {
-            gotoxy(1, 6);
-            cout << "no Z match";
-        }
-        if (checkUMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "U match";
+        if (checkLMatch(board, i1, j1, i2, j2))
             return true;
-        }
-        else
-        {
-            gotoxy(1, 7);
-            cout << "no U match";
-        }
-        Sleep(1000);
-        gotoxy(1, 4);
-        cout << "            \n              \n              \n               \n";
+
+        if (checkZMatch(board, i1, j1, i2, j2))
+            return true;
+
+        if (checkUMatch(board, i1, j1, i2, j2))
+            return true;
     }
-    gotoxy(1, 1);
-    cout << "no match";
     return false;
+}
+
+bool checkValid(Board_1** cell, int i, int j)
+{
+    for (int row = 1; row < easyHeight + 1; row++)
+        if (!cell[row][j].isValid)
+            return false;
+
+    for (int col = 1; col < easyWidth + 1; col++)
+        if (!cell[i][col].isValid)
+            return false;
+    return true;
+}
+
+void processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected)
+{
+    cell[i][j].drawCell(); // Set the selected cell
+    Sleep(1000);
+
+    cell[iselected][jselected].isSelected = false;
+    cell[i][j].isSelected = false;
+
+    if (checkMatch(cell, iselected, jselected, i, j))
+    {
+        cell[iselected][jselected].deleteCell();
+        cell[i][j].deleteCell();
+
+        cell[iselected][jselected].c = ' ';
+        cell[i][j].c = ' ';
+
+        cell[iselected][jselected].isDeleted = true;
+        cell[i][j].isDeleted = true;
+    }
+    else
+    {
+        if (!cell[iselected][jselected].isDeleted)
+            cell[iselected][jselected].isValid = true;
+        if (!cell[i][j].isDeleted)
+            cell[i][j].isValid = true;
+
+        // Set the old selected cell back to default
+        cell[iselected][jselected].drawCell();
+    }
+
+    // When done process set the current standing cell
+    cell[i][j].isStopped = true;
+    cell[i][j].drawCell();
+    cell[i][j].isStopped = false;
 }
 
 void processAction(Board_1** cell)
@@ -314,61 +322,17 @@ void processAction(Board_1** cell)
     int selectedCount = 2;
 
     cell[i][j].isStopped = true;
-    // lỗi chọn 1 ô 2 lần, chọn 1 ô đi vào lại thì mất
+
     while (true)
     {
-        // If standing at a cell
         if (cell[i][j].isStopped)
         {
-            gotoxy(1, 3);
-            cout << i << "," << j;
             cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
             oldi = i;
             oldj = j;
 
             cell[i][j].drawCell(); // Set the current standing cell
             cell[i][j].isStopped = false;
-        }
-
-        // If a cell is selected
-        if (cell[i][j].isSelected)
-        {
-            cell[i][j].drawCell(); // Set the selected cell
-
-            if (selectedCount == 2)
-            {
-                iselected = i;
-                jselected = j;
-            }
-
-            selectedCount--;
-
-            // If 2 cells are selected
-            if (selectedCount == 0)
-            {
-                cell[iselected][jselected].isSelected = false;
-                cell[i][j].isSelected = false;
-                selectedCount = 2;
-
-                if (checkMatch(cell, iselected, jselected, i, j))
-                {
-                    cell[iselected][jselected].deleteCell();
-                    cell[i][j].deleteCell();
-
-                    cell[iselected][jselected].c = ' ';
-                    cell[i][j].c = ' ';
-                }
-                else
-                {
-                    cell[iselected][jselected].isValid = true;
-                    cell[i][j].isValid = true;
-
-                    cell[iselected][jselected].drawCell();
-                }
-                cell[i][j].isStopped = true;
-                cell[i][j].drawCell();
-                cell[i][j].isStopped = false;
-            }
         }
 
         switch (getConsoleInput())
@@ -378,19 +342,8 @@ void processAction(Board_1** cell)
             if (i == 1)
                 i = easyHeight;
             else
-            {
-                do
-                {
-                    i--;
-                    if (i == 0)
-                    {
-                        i = easyHeight; // dự định làm checkValid theo I và J
-                    }
-
-                } while (i > 0 && !cell[i][j].isValid);
-            }
+                i--;
             cell[i][j].isStopped = true;
-
             break;
         }
         case 2:
@@ -422,15 +375,28 @@ void processAction(Board_1** cell)
         }
         case 5:
         {
-            if (cell[i][j].isSelected == false && cell[i][j].isValid == true)
+            // If a cell is valid and not selected
+            if (!cell[i][j].isSelected && cell[i][j].isValid)
             {
                 cell[i][j].isSelected = true;
                 cell[i][j].isValid = false;
+                cell[i][j].isStopped = true;
+
+                if (selectedCount == 2) // Save the location of the first selected
+                {
+                    iselected = i;
+                    jselected = j;
+                }
+                selectedCount--;
+                if (selectedCount == 0)
+                {
+                    processSelectedCell(cell, i, j, iselected, jselected);
+                    selectedCount = 2;
+                }
             }
             break;
         }
         default:
-            cout << "END";
             return;
         }
     }

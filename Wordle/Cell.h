@@ -36,7 +36,8 @@ struct Board_1
     bool isStopped = false;
     bool isSelected = false;
     bool isValid = true;
-
+    bool isDeleted = false;
+    
     void drawCell();
     void deleteCell();
 };
