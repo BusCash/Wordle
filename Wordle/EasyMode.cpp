@@ -213,6 +213,13 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     }
     else
     {
+        ymin.y = y1;
+        ymin.x = x1;
+        ymax.y = y2;
+        ymax.x = x2;
+    }
+    else
+    {
         imin.x = i2;
         imin.y = j2;
         imax.x = i1;
@@ -246,49 +253,15 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     return false;
 }
 
-bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2)
+bool checkMatch(Board_1** board, int x1, int y1, int x2, int y2)
 {
-    if (board[i1][j1].c == board[i2][j2].c)
+    if (board[x1][y1].c == board[x2][y2].c)
     {
-        if (checkIMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout
-                << "I match";
+        if (checkIMatch(board, x1, y1, x2, y2))
             return true;
-        }
-        else
-        {
-            gotoxy(1, 4);
-            cout << "no I match";
-        }
-        if (checkLMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "L match";
+        else if (checkLAndZMatch(board, x1, y1, x2, y2))
             return true;
-        }
-        else
-        {
-            gotoxy(1, 5);
-            cout << "no L match";
-        }
-        if (checkZMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "Z match";
-            return true;
-        }
-
-        else
-        {
-            gotoxy(1, 6);
-            cout << "no Z match";
-        }
-        if (checkUMatch(board, i1, j1, i2, j2))
-        {
-            gotoxy(1, 1);
-            cout << "U match";
+        else if (checkUMatch(board, x1, y1, x2, y2))
             return true;
         }
         else
@@ -305,92 +278,44 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2)
     return false;
 }
 
-void processAction(Board_1** cell)
+void move(Board_1** cell)
 {
-    int i = 1, j = 1;
+    // int topmost = 10;
+    // int leftmost = 16;
+    // int bottommost = topmost + (cellHeight + 1) * (easyHeight - 1);
+    // int rightmost = leftmost + cellWidth * (easyWidth - 1);
+
+    // int x = 16, y = 10;
+    // int oldx = x, oldy = y;
+    int i = 0, j = 0;
     int oldi = i, oldj = j;
 
-    int iselected = 0, jselected = 0;
-    int selectedCount = 2;
+    cell[i][j].isSelected = true;
 
     cell[i][j].isStopped = true;
     // lỗi chọn 1 ô 2 lần, chọn 1 ô đi vào lại thì mất
     while (true)
     {
-        // If standing at a cell
-        if (cell[i][j].isStopped)
+        if (cell[i][j].isSelected == true)
         {
-            gotoxy(1, 3);
-            cout << i << "," << j;
-            cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
+            cell[oldi][oldj].drawCell();
             oldi = i;
             oldj = j;
 
-            cell[i][j].drawCell(); // Set the current standing cell
-            cell[i][j].isStopped = false;
-        }
-
-        // If a cell is selected
-        if (cell[i][j].isSelected)
-        {
-            cell[i][j].drawCell(); // Set the selected cell
-
-            if (selectedCount == 2)
-            {
-                iselected = i;
-                jselected = j;
-            }
-
-            selectedCount--;
-
-            // If 2 cells are selected
-            if (selectedCount == 0)
-            {
-                cell[iselected][jselected].isSelected = false;
-                cell[i][j].isSelected = false;
-                selectedCount = 2;
-
-                if (checkMatch(cell, iselected, jselected, i, j))
-                {
-                    cell[iselected][jselected].deleteCell();
-                    cell[i][j].deleteCell();
-
-                    cell[iselected][jselected].c = ' ';
-                    cell[i][j].c = ' ';
-                }
-                else
-                {
-                    cell[iselected][jselected].isValid = true;
-                    cell[i][j].isValid = true;
-
-                    cell[iselected][jselected].drawCell();
-                }
-                cell[i][j].isStopped = true;
-                cell[i][j].drawCell();
-                cell[i][j].isStopped = false;
-            }
+            cell[i][j].drawCell();
+            cell[i][j].isSelected = false;
         }
 
         switch (getConsoleInput())
         {
         case 1:
         {
-            if (i == 1)
-                i = easyHeight;
+            if (i == 0)
+                i = easyHeight - 1;
             else
-            {
-                do
-                {
-                    i--;
-                    if (i == 0)
-                    {
-                        i = easyHeight; // dự định làm checkValid theo I và J
-                    }
-
-                } while (i > 0 && !cell[i][j].isValid);
-            }
-            cell[i][j].isStopped = true;
-
+                i -= 1;
+            cout << i << "," << j << " ";
+            cell[i][j].isSelected = true;
             break;
         }
         case 2:
@@ -417,20 +342,10 @@ void processAction(Board_1** cell)
                 j = 1;
             else
                 j += 1;
-            cell[i][j].isStopped = true;
+            cell[i][j].isSelected = true;
             break;
         }
         case 5:
-        {
-            if (cell[i][j].isSelected == false && cell[i][j].isValid == true)
-            {
-                cell[i][j].isSelected = true;
-                cell[i][j].isValid = false;
-            }
-            break;
-        }
-        default:
-            cout << "END";
             return;
         }
     }

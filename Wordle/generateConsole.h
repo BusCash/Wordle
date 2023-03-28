@@ -2,7 +2,7 @@
 #include "Cell.h"
 
 #define windowHeight 750
-#define windowWidth 870
+#define windowWidth 860
 #define gameHeight 35
 #define gameWidth 85
 #define midHeight 15
@@ -22,10 +22,9 @@ void setColor(int textColor);
 void drawGraph(int delayTime);
 void drawTitle();
 void generateGraphic();
-void changeBarStatus(int barX, int barY, int bColor, int tColor);
+void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int tColor);
 int getConsoleInput();
 int generateMenu();
 void clearConsole();
 void changePlayBarStatus(int barX, int barY, int bColor, int tColor);
 int showPlayMenu();
-void showCredit();
