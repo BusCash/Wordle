@@ -18,7 +18,7 @@ void getInfoPlayer(Record player[], int &n)
 	n = 0;
 	int y = midHeight;
 	int lines = 5;
-	fstream fs("leaderboard.txt", ios::in);
+	fstream fs("leaderboard.txt", ios::app);
 
 	while (!fs.eof()) {
 		getline(fs, player[n].playerName);
@@ -28,6 +28,13 @@ void getInfoPlayer(Record player[], int &n)
 		n++;
 	}
 	fs.close();
+}
+
+void saveRecord(Record player) 
+{
+	ofstream ofs ("leaderboard.txt", ios::app);
+	ofs << player.playerName << " " << player.score << endl;
+	ofs.close();
 }
 
 void printLeaderboard()
@@ -57,6 +64,7 @@ void printLeaderboard()
 		cout << player[i - 1].score;
 		y += 2;
 	}
+	saveRecord;
 }
 
 void showLeaderboard()

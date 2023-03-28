@@ -1,17 +1,18 @@
 #pragma once
 #include "Cell.h"
 
-#define windowHeight 780
-#define windowWidth 900
+#define windowHeight 750
+#define windowWidth 870
 #define gameHeight 35
-#define gameWidth 87
+#define gameWidth 85
 #define midHeight 15
-#define midWidth 40
+#define midWidth 43
 #define UP 72
 #define DOWN 80
 #define LEFT 75
 #define RIGHT 77
 #define ENTER 13
+#define SPACEBAR 32
 
 void gotoxy(int x, int y);
 void setWindowSizeAndPos();

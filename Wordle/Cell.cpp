@@ -2,14 +2,31 @@
 #include "generateConsole.h"
 
 char cell[cellHeight][cellWidth] = {
-    {"       "},
-    {"       "},
-    {"       "},
+    {"     "},
+    {"     "},
+    {"     "},
 };
 
 void Board_1::drawCell()
 {
-    if (isSelected == true)
+    if (!isValid)
+    {
+        if (isStopped)
+        {
+            setColor(3 * 16 + 15);
+            for (int i = 0; i < cellHeight; i++)
+            {
+                gotoxy(x, y + i);
+                cout << cell[i];
+            }
+        }
+        else
+            deleteCell();
+        setColor(7);
+        return;
+    }
+
+    if (isStopped)
     {
         setColor(3 * 16 + 15);
         for (int i = 0; i < cellHeight; i++)
@@ -17,7 +34,7 @@ void Board_1::drawCell()
             gotoxy(x, y + i);
             cout << cell[i];
         }
-        gotoxy(x + 3, y + 1);
+        gotoxy(cx, cy);
         cout << c;
     }
     else
@@ -28,7 +45,19 @@ void Board_1::drawCell()
             gotoxy(x, y + i);
             cout << cell[i];
         }
-        gotoxy(x + 3, y + 1);
+        gotoxy(cx, cy);
+        cout << c;
+    }
+
+    if (isSelected)
+    {
+        setColor(2 * 16 + 15);
+        for (int i = 0; i < cellHeight; i++)
+        {
+            gotoxy(x, y + i);
+            cout << cell[i];
+        }
+        gotoxy(cx, cy);
         cout << c;
     }
     setColor(7);
@@ -37,9 +66,10 @@ void Board_1::drawCell()
 void Board_1::deleteCell()
 {
     setColor(7);
-    for (int i = 0; i < 3; i++)
+    c = ' ';
+    for (int i = 0; i < cellHeight; i++)
     {
-        gotoxy(x * cellWidth + 16, y * (cellHeight + 1) + 10 + i);
+        gotoxy(x, y + i);
         cout << cell[i];
     }
 }
