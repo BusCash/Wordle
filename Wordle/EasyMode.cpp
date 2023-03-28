@@ -213,13 +213,6 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     }
     else
     {
-        ymin.y = y1;
-        ymin.x = x1;
-        ymax.y = y2;
-        ymax.x = x2;
-    }
-    else
-    {
         imin.x = i2;
         imin.y = j2;
         imax.x = i1;
@@ -259,8 +252,9 @@ bool checkMatch(Board_1** board, int x1, int y1, int x2, int y2)
     {
         if (checkIMatch(board, x1, y1, x2, y2))
             return true;
-        else if (checkLAndZMatch(board, x1, y1, x2, y2))
+        else if (checkLMatch(board, x1, y1, x2, y2))
             return true;
+
         else if (checkUMatch(board, x1, y1, x2, y2))
             return true;
         }
