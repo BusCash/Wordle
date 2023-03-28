@@ -95,6 +95,16 @@ void Board_1::drawCell()
     setColor(7);
 }
 
+void Board_1::drawArrow(int cx2, int cy2)
+{
+    setColor(14);
+    gotoxy(cx, cy + 1);
+    cout << "<";
+    for (int i = cy + 2; i < cy2 - 2; i++)
+        cout << "=";
+    cout << ">";
+}
+
 void Board_1::deleteCell()
 {
     setColor(7);

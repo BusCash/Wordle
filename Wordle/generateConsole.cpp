@@ -130,6 +130,7 @@ void changeBarStatus(int barX, int barY, int moveY, string s, int bColor, int tC
         gotoxy(barX + 12 - s.length() / 2, barY);
         cout << s;
     }
+}
 
 int generateMenu()
 {
@@ -139,7 +140,7 @@ int generateMenu()
     string barName = "PLAY,LEADERBOARD,CREDITS,QUIT";
 
     for (int i = barY; i <= barY + 2 * 3; i += 2)
-        changeBarStatus(barX, i, 0, 7);
+        changeBarStatus(barX, sbarY, i, barName, 0, 7);
 
     bool check = true;
     int input;
@@ -147,10 +148,11 @@ int generateMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, oldY, 0, 7);
+            changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
             oldY = moveY;
 
-            changeBarStatus(barX, moveY, 6, 13); // Highlight the selected bar
+            // Highlight the selected bar
+            changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
             check = false;
         }
 
@@ -268,7 +270,7 @@ int showPlayMenu()
     }
 }
 
-void showCredit()
+void showCredits()
 {
     gotoxy(midWidth - 9, midHeight + 6);
     cout << "22127126 - Nguyen Duy Hoang";

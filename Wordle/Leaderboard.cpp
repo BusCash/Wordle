@@ -64,7 +64,7 @@ void printLeaderboard()
 		cout << player[i - 1].score;
 		y += 2;
 	}
-	saveRecord;
+	saveRecord(p);
 }
 
 void showLeaderboard()

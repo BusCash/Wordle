@@ -246,70 +246,96 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2)
     return false;
 }
 
-bool checkMatch(Board_1** board, int x1, int y1, int x2, int y2)
+bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2)
 {
-    if (board[x1][y1].c == board[x2][y2].c)
+    if (board[i1][j1].c == board[i2][j2].c)
     {
-        if (checkIMatch(board, x1, y1, x2, y2))
-            return true;
-        else if (checkLMatch(board, x1, y1, x2, y2))
+        if (checkIMatch(board, i1, j1, i2, j2))
             return true;
 
-        else if (checkUMatch(board, x1, y1, x2, y2))
+        else if (checkLMatch(board, i1, j1, i2, j2))
             return true;
-        }
-        else
-        {
-            gotoxy(1, 7);
-            cout << "no U match";
-        }
-        Sleep(1000);
-        gotoxy(1, 4);
-        cout << "            \n              \n              \n               \n";
+
+        else if (checkZMatch(board, i1, j1, i2, j2))
+            return true;
+
+        else if (checkUMatch(board, i1, j1, i2, j2))
+            return true;
     }
-    gotoxy(1, 1);
-    cout << "no match";
     return false;
 }
 
-void move(Board_1** cell)
+void processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected)
 {
-    // int topmost = 10;
-    // int leftmost = 16;
-    // int bottommost = topmost + (cellHeight + 1) * (easyHeight - 1);
-    // int rightmost = leftmost + cellWidth * (easyWidth - 1);
+    cell[i][j].drawCell(); // Set the selected cell;
+    Sleep(500);
 
-    // int x = 16, y = 10;
-    // int oldx = x, oldy = y;
-    int i = 0, j = 0;
+    cell[iselected][jselected].isSelected = false;
+    cell[i][j].isSelected = false;
+
+    if (checkMatch(cell, iselected, jselected, i, j))
+    {
+        cell[iselected][jselected].deleteCell();
+        cell[i][j].deleteCell();
+
+        cell[i][j].drawArrow(cell[iselected][jselected].cx, cell[iselected][jselected].cy);
+
+        cell[iselected][jselected].c = ' ';
+        cell[i][j].c = ' ';
+
+        cell[iselected][jselected].isDeleted = true;
+        cell[i][j].isDeleted = true;
+    }
+    else
+    {
+        if (!cell[iselected][jselected].isDeleted)
+            cell[iselected][jselected].isValid = true;
+        if (!cell[i][j].isDeleted)
+            cell[i][j].isValid = true;
+
+        // Set the old selected cell back to default
+        cell[iselected][jselected].drawCell();
+    }
+
+    // When done process set the current standing cell
+    cell[i][j].isStopped = true;
+    cell[i][j].drawCell();
+    cell[i][j].isStopped = false;
+}
+
+void processAction(Board_1** cell)
+{
+    int i = 1, j = 1;
     int oldi = i, oldj = j;
 
-    cell[i][j].isSelected = true;
+    int iselected = 0, jselected = 0;
+    int selectedCount = 2;
 
     cell[i][j].isStopped = true;
-    // lỗi chọn 1 ô 2 lần, chọn 1 ô đi vào lại thì mất
+
     while (true)
     {
-        if (cell[i][j].isSelected == true)
+        if (cell[i][j].isStopped)
         {
-            cell[oldi][oldj].drawCell();
+            gotoxy(1, 1);
+            cout << cell[i][j].cx << "," << cell[i][j].cy;
+            cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
             oldi = i;
             oldj = j;
 
-            cell[i][j].drawCell();
-            cell[i][j].isSelected = false;
+            cell[i][j].drawCell(); // Set the current standing cell
+            cell[i][j].isStopped = false;
         }
 
         switch (getConsoleInput())
         {
         case 1:
         {
-            if (i == 0)
-                i = easyHeight - 1;
+            if (i == 1)
+                i = easyHeight;
             else
-                i -= 1;
-            cout << i << "," << j << " ";
-            cell[i][j].isSelected = true;
+                i--;
+            cell[i][j].isStopped = true;
             break;
         }
         case 2:
@@ -336,10 +362,33 @@ void move(Board_1** cell)
                 j = 1;
             else
                 j += 1;
-            cell[i][j].isSelected = true;
+            cell[i][j].isStopped = true;
             break;
         }
         case 5:
+        {
+            // If a cell is valid and not selected
+            if (!cell[i][j].isSelected && cell[i][j].isValid)
+            {
+                cell[i][j].isSelected = true;
+                cell[i][j].isValid = false;
+                cell[i][j].isStopped = true;
+
+                if (selectedCount == 2) // Save the location of the first selected
+                {
+                    iselected = i;
+                    jselected = j;
+                }
+                selectedCount--;
+                if (selectedCount == 0)
+                {
+                    processSelectedCell(cell, i, j, iselected, jselected);
+                    selectedCount = 2;
+                }
+            }
+            break;
+        }
+        default:
             return;
         }
     }
