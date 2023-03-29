@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
+#include <fstream>
 
 #define boardHeight 6
 #define boardWidth 9
@@ -30,10 +31,10 @@ struct Position
 struct Board_1
 {
     int x, y;
-    int i = (y - 12) / (cellHeight + 1),
-        j = (x - 17) / cellWidth;
+    int ci, cj;
     char c = ' ';
     int cx, cy;
+    string background[15];
 
     bool isStopped = false;
     bool isSelected = false;
@@ -41,7 +42,8 @@ struct Board_1
     bool isDeleted = false;
 
     void drawCell();
-    void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
-    void deleteArrow(int cx2, int cy2);
     void deleteCell();
+
+    void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
+    void deleteArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 };
