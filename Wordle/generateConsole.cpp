@@ -122,13 +122,14 @@ int getConsoleInput()
 void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int tColor)
 {
     int numY;
-    int numPos;
+    int numPos = 0;
     string name;
     int namePos;
     setColor(bColor * 16 + tColor);
     while (numPos != -1)
     {
         numPos = barY.find(',');
+
         numY = stoi(barY.substr(0, (numPos == -1) ? barY.length() : numPos));
 
         namePos = s.find(',');
@@ -142,8 +143,10 @@ void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int
             cout << name;
         }
 
-        barY.erase(0, numPos + 1);
-        s.erase(0, namePos + 1);
+        if (numPos > 0)
+            barY.erase(0, numPos + 1);
+        if (namePos > 0)
+            s.erase(0, namePos + 1);
     }
     setColor(7);
 }
