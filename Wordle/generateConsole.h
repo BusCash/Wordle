@@ -2,7 +2,7 @@
 #include "Cell.h"
 
 #define windowHeight 750
-#define windowWidth 900
+#define windowWidth 890
 #define gameHeight 35
 #define gameWidth 87
 #define midHeight 15
