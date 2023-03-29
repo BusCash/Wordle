@@ -1,5 +1,6 @@
 #include "generateConsole.h"
 
+#include<string>
 void gotoxy(int x, int y)
 {
     HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -137,10 +138,11 @@ int generateMenu()
     int barX = midWidth - 12, barY = midHeight + 6;
     int moveY = barY, oldY = barY;
     string sbarY = "21,23,25,27";
+    int ibarY = stoi(sbarY, 0, 10);
     string barName = "PLAY,LEADERBOARD,CREDITS,QUIT";
 
     for (int i = barY; i <= barY + 2 * 3; i += 2)
-        changeBarStatus(barX, sbarY, i, barName, 0, 7);
+        changeBarStatus(barX, ibarY, i, barName, 0, 7);
 
     bool check = true;
     int input;
@@ -148,11 +150,11 @@ int generateMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
+            changeBarStatus(barX, ibarY, oldY, barName, 0, 7);
             oldY = moveY;
 
             // Highlight the selected bar
-            changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
+            changeBarStatus(barX, ibarY, moveY, barName, 6, 13);
             check = false;
         }
 
@@ -179,7 +181,7 @@ int generateMenu()
         case 5:
         {
             for (int i = barY; i <= barY + 2 * 3; i += 2)
-                changeBarStatus(barX, sbarY, i, "", 0, 0);
+                changeBarStatus(barX, ibarY, i, "", 0, 0);
 
             if (moveY == 27) // If "QUIT" is selected
                 return 0;
@@ -214,10 +216,11 @@ int showPlayMenu()
     int barX = midWidth - 12, barY = midHeight + 7;
     int moveY = barY, oldY = barY;
     string sbarY = "22,24,26";
+    int ibarY = stoi(sbarY, 0, 10);
     string barName = "EASY,HARDCORE,BACK";
 
     for (int i = barY; i <= barY + 2 * 2; i += 2)
-        changeBarStatus(barX, sbarY, i, barName, 0, 7);
+        changeBarStatus(barX, ibarY, i, barName, 0, 7);
 
     bool check = true;
     int input;
@@ -225,10 +228,10 @@ int showPlayMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
+            changeBarStatus(barX, ibarY, oldY, barName, 0, 7);
             oldY = moveY;
 
-            changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
+            changeBarStatus(barX, ibarY, moveY, barName, 6, 13);
             check = false;
         }
 
@@ -255,7 +258,7 @@ int showPlayMenu()
         case 5:
         {
             for (int i = barY; i <= barY + 2 * 2; i += 2)
-                changeBarStatus(barX, sbarY, i, "", 0, 0);
+                changeBarStatus(barX, ibarY, i, "", 0, 0);
 
             if (moveY == 26) // If "BACK" is selected
                 return 0;

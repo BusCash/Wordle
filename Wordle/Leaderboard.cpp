@@ -18,9 +18,10 @@ void getInfoPlayer(Record player[], int &n)
 	n = 0;
 	int y = midHeight;
 	int lines = 5;
-	fstream fs("leaderboard.txt", ios::app);
+	fstream fs("leaderboard.txt", ios::in);
 
-	while (!fs.eof()) {
+	while (!fs.eof()) 
+	{
 		getline(fs, player[n].playerName);
 		getline(fs, player[n].level);
 		fs >> player[n].score;
@@ -30,10 +31,13 @@ void getInfoPlayer(Record player[], int &n)
 	fs.close();
 }
 
-void saveRecord(Record player) 
+void saveRecord(Record player [], int n)
 {
 	ofstream ofs ("leaderboard.txt", ios::app);
-	ofs << player.playerName << " " << player.score << endl;
+	for (int i = 0; i < n; ++i)
+	{
+		ofs << player[i].playerName << " " << player[i].level << " " << player[i].score << endl;
+	}
 	ofs.close();
 }
 
@@ -64,7 +68,7 @@ void printLeaderboard()
 		cout << player[i - 1].score;
 		y += 2;
 	}
-	saveRecord(p);
+	saveRecord(player, n);
 }
 
 void showLeaderboard()
@@ -84,4 +88,30 @@ void showLeaderboard()
 			break;
 		}
 	}
+}
+
+//de tam ben day
+
+void Background1()
+{
+	string s;
+	ifstream ifs;
+	ifs.open("bulbasaur.txt");
+	while (!ifs.eof())
+	{
+		getline(ifs, s);
+	}
+	cout << s;
+}
+
+void Background2()
+{
+	string s;
+	ifstream ifs;
+	ifs.open("squirle.txt");
+	while (!ifs.eof())
+	{
+		getline(ifs, s);
+	}
+	cout << s;
 }
