@@ -68,7 +68,6 @@ void printLeaderboard()
 		cout << player[i - 1].score;
 		y += 2;
 	}
-	saveRecord(player, n);
 }
 
 void showLeaderboard()
