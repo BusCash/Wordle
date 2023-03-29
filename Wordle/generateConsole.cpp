@@ -77,18 +77,18 @@ void drawTitle()
 {
     int x = gameWidth / 4 - 15;
     int y = gameHeight / 4;
-    gotoxy(x - 1, y);
+    gotoxy(x, y);
     cout << "~77:   .77!   :7777777.  :77777777!   ~7777777     !77.        :777777777?^";
-    gotoxy(x - 1, y + 1);
+    gotoxy(x , y + 1);
     cout << "P@@! . .&@&..5#@?!7!Y@G? 7@@B!7!!B@P~ 5@@5!!5&G7. .#@@^        ~@@#";
-    gotoxy(x - 1, y + 2);
+    gotoxy(x, y + 2);
     cout << "P@@J7&Y7&@#..&@&.   !@@P 7@@P   ~G@@7 5@@7   :&@#: #@&^        ~@@B!!!!!~~~";
-    gotoxy(x - 1, y + 3);
+    gotoxy(x, y + 3);
     cout << "P@@@@&@@@@#..&@&.   !@@P 7@@#Y5G@577: 5@@7   :&@&: #@&:        ~@@B77777!!!";
-    gotoxy(x - 1, y + 4);
+    gotoxy(x, y + 4);
     cout << "P@@B5:?B@@&..5#@7~!~J@BJ 7@@G:5#@&G~. 5@@5~~5&G?. .#@@?~!!!!!~ ~@@B";
     gotoxy(x, y + 5);
-    cout << "!??:   .??7.  ^???????.  ^??!  .???J^ ~???????     7?????????7 :?????????J^^";
+    cout << "!??:   .??7.  ^???????.  ^??!  .???J^ ~???????     7?????????7 :?????????J^";
 }
 
 void generateGraphic()
@@ -120,15 +120,15 @@ int getConsoleInput()
 }
 
 
-void changeBarStatus(int barX, int barY, int moveY, string s, int bColor, int tColor)
+void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int tColor)
 {
     setColor(bColor * 16 + tColor);
-
-    if (moveY == barY)
+    int ibarY = stoi(barY, 0, 10);
+    if (moveY == ibarY)
     {
-        gotoxy(barX, barY);
+        gotoxy(barX, ibarY);
         cout << "                        ";
-        gotoxy(barX + 12 - s.length() / 2, barY);
+        gotoxy(barX + 12 - s.length() / 2, ibarY);
         cout << s;
     }
 }
@@ -138,11 +138,10 @@ int generateMenu()
     int barX = midWidth - 12, barY = midHeight + 6;
     int moveY = barY, oldY = barY;
     string sbarY = "21,23,25,27";
-    int ibarY = stoi(sbarY, 0, 10);
     string barName = "PLAY,LEADERBOARD,CREDITS,QUIT";
 
     for (int i = barY; i <= barY + 2 * 3; i += 2)
-        changeBarStatus(barX, ibarY, i, barName, 0, 7);
+        changeBarStatus(barX, sbarY, i, barName, 0, 7);
 
     bool check = true;
     int input;
@@ -150,11 +149,11 @@ int generateMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, ibarY, oldY, barName, 0, 7);
+            changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
             oldY = moveY;
 
             // Highlight the selected bar
-            changeBarStatus(barX, ibarY, moveY, barName, 6, 13);
+            changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
             check = false;
         }
 
@@ -181,7 +180,7 @@ int generateMenu()
         case 5:
         {
             for (int i = barY; i <= barY + 2 * 3; i += 2)
-                changeBarStatus(barX, ibarY, i, "", 0, 0);
+                changeBarStatus(barX, sbarY, i, "", 0, 0);
 
             if (moveY == 27) // If "QUIT" is selected
                 return 0;
@@ -216,11 +215,10 @@ int showPlayMenu()
     int barX = midWidth - 12, barY = midHeight + 7;
     int moveY = barY, oldY = barY;
     string sbarY = "22,24,26";
-    int ibarY = stoi(sbarY, 0, 10);
     string barName = "EASY,HARDCORE,BACK";
 
     for (int i = barY; i <= barY + 2 * 2; i += 2)
-        changeBarStatus(barX, ibarY, i, barName, 0, 7);
+        changeBarStatus(barX, sbarY, i, barName, 0, 7);
 
     bool check = true;
     int input;
@@ -228,10 +226,10 @@ int showPlayMenu()
     {
         if (check == true)
         {
-            changeBarStatus(barX, ibarY, oldY, barName, 0, 7);
+            changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
             oldY = moveY;
 
-            changeBarStatus(barX, ibarY, moveY, barName, 6, 13);
+            changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
             check = false;
         }
 
@@ -258,7 +256,7 @@ int showPlayMenu()
         case 5:
         {
             for (int i = barY; i <= barY + 2 * 2; i += 2)
-                changeBarStatus(barX, ibarY, i, "", 0, 0);
+                changeBarStatus(barX, sbarY, i, "", 0, 0);
 
             if (moveY == 26) // If "BACK" is selected
                 return 0;
