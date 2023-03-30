@@ -75,6 +75,7 @@ void drawGraph(int delayTime)
 
 void drawTitle()
 {
+    setColor(14);
     int x = gameWidth / 4 - 15;
     int y = gameHeight / 4;
     gotoxy(x, y);
@@ -116,6 +117,10 @@ int getConsoleInput()
     {
         if (key == ENTER || key == SPACEBAR)
             return 5;
+        else if (key == 104) // h key
+            return 6;
+        else if (key == ESC)
+            return 7;
     }
 }
 
@@ -129,7 +134,6 @@ void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int
     while (numPos != -1)
     {
         numPos = barY.find(',');
-
         numY = stoi(barY.substr(0, (numPos == -1) ? barY.length() : numPos));
 
         namePos = s.find(',');
@@ -304,4 +308,5 @@ void showCredits()
     int barX = midWidth - 9, barY = midHeight + 11;
     gotoxy(barX, barY);
     cout << "          QUIT          ";
+    setColor(7);
 }

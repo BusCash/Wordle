@@ -34,16 +34,19 @@ struct Board_1
     int ci, cj;
     char c = ' ';
     int cx, cy;
-    string background[15];
 
     bool isStopped = false;
     bool isSelected = false;
     bool isValid = true;
     bool isDeleted = false;
+    bool isHint = false;
+
+    void drawBackgroundCell(char bg[][41]);
 
     void drawCell();
-    void deleteCell();
+    void deleteCell(int color);
 
     void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
-    void deleteArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 };
+
+void getBackground(char bg[][41], string filein);
