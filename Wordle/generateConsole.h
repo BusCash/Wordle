@@ -29,3 +29,5 @@ int generateMenu();
 void clearConsole();
 int showPlayMenu();
 void showCredits();
+void getBackground(char bg[][41], string filein);
+void countTimeDown(Time* t);

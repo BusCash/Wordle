@@ -3,4 +3,4 @@
 #include "generateConsole.h"
 
 void showWordDisplayEffect(string s);
-Player getPlayerInfoEffect();
+Player getPlayerInfo();
