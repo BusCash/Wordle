@@ -13,6 +13,7 @@
 #define RIGHT 77
 #define ENTER 13
 #define SPACEBAR 32
+#define ESC 27
 
 void gotoxy(int x, int y);
 void setWindowSizeAndPos();
