@@ -34,6 +34,8 @@ int main()
             break;
         }
         case 2:
+            clearConsole();
+            printLeaderboard();
             break;
         case 3:
             break;

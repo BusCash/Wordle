@@ -6,14 +6,14 @@
 #include<string>
 using namespace std;
 
-bool compareScore(Record a, Record b)
+bool compareScore(Player a, Player b)
 {
-	if (a.score < b.score)
+	if (a.point < b.point)
 		return true;
 	return false;
 }
 
-void getInfoPlayer(Record player[], int &n)
+void getInfoPlayer(Player player[], int &n)
 {
 	n = 0;
 	int y = midHeight;
@@ -22,21 +22,21 @@ void getInfoPlayer(Record player[], int &n)
 
 	while (!fs.eof()) 
 	{
-		getline(fs, player[n].playerName);
-		getline(fs, player[n].level);
-		fs >> player[n].score;
+		getline(fs, player[n].name);
+		getline(fs, player[n].id);
+		fs >> player[n].point;
 		fs.ignore();
 		n++;
 	}
 	fs.close();
 }
 
-void saveRecord(Record player [], int n)
+void saveRecord(Player player[], int n)
 {
 	ofstream ofs ("leaderboard.txt", ios::app);
 	for (int i = 0; i < n; ++i)
 	{
-		ofs << player[i].playerName << " " << player[i].level << " " << player[i].score << endl;
+		ofs << player[i].name << " " << player[i].id << " " << player[i].point << endl;
 	}
 	ofs.close();
 }
@@ -45,7 +45,7 @@ void printLeaderboard()
 {
 	int n = 0;
 	int y = midHeight;
-	Record player[100];
+	Player player[100];
 	getInfoPlayer(player, n);
 	int lines = 5;
 	for (int i = 0; i < n; i++) 
@@ -61,11 +61,11 @@ void printLeaderboard()
 	for (int i = 1; i < lines; i++) 
 	{
 		gotoxy(midWidth - 10, y);
-		cout << player[i - 1].playerName;
+		cout << player[i - 1].name;
 		gotoxy(midWidth, y);
-		cout << player[i - 1].level;
+		cout << player[i - 1].id;
 		gotoxy(midWidth + 10, y);
-		cout << player[i - 1].score;
+		cout << player[i - 1].point;
 		y += 2;
 	}
 	saveRecord(player, n);
