@@ -27,6 +27,7 @@ struct Player
 {
 	string name;
 	string id;
+	int point;
 	Time easyplaytime = { 1, 30 };
 	Time hardplaytime = { 1, 30 };
 };

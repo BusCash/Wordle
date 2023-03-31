@@ -13,14 +13,14 @@ bool compareScore(Player a, Player b)
 	return false;
 }
 
-void getInfoPlayer(Player player[], int &n)
+void getInfoPlayer(Player player[], int& n)
 {
 	n = 0;
 	int y = midHeight;
 	int lines = 5;
 	fstream fs("leaderboard.txt", ios::in);
 
-	while (!fs.eof()) 
+	while (!fs.eof())
 	{
 		getline(fs, player[n].name);
 		getline(fs, player[n].id);
@@ -33,7 +33,7 @@ void getInfoPlayer(Player player[], int &n)
 
 void saveRecord(Player player[], int n)
 {
-	ofstream ofs ("leaderboard.txt", ios::app);
+	ofstream ofs("leaderboard.txt", ios::app);
 	for (int i = 0; i < n; ++i)
 	{
 		ofs << player[i].name << " " << player[i].id << " " << player[i].point << endl;
@@ -48,9 +48,9 @@ void printLeaderboard()
 	Player player[100];
 	getInfoPlayer(player, n);
 	int lines = 5;
-	for (int i = 0; i < n; i++) 
+	for (int i = 0; i < n; i++)
 	{
-		for (int j = i + 1; j < n; j++) 
+		for (int j = i + 1; j < n; j++)
 		{
 			if (compareScore(player[i], player[j]))
 			{
@@ -58,7 +58,7 @@ void printLeaderboard()
 			}
 		}
 	}
-	for (int i = 1; i < lines; i++) 
+	for (int i = 1; i < lines; i++)
 	{
 		gotoxy(midWidth - 10, y);
 		cout << player[i - 1].name;
