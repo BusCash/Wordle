@@ -288,7 +288,7 @@ void showParameter(Player p)
 	setColor(7);
 }
 
-void playSound()
-{
-	PlaySound(TEXT("D:\\C++\\ProgTech\\Lab\\Project\\pingpong.wav"), NULL, SND_FILENAME);
-}
+//void playSound()
+//{
+//	PlaySound(TEXT("D:\\C++\\ProgTech\\Lab\\Project\\pingpong.wav"), NULL, SND_FILENAME | SND_ASYNC);
+//}

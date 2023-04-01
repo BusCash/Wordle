@@ -43,7 +43,7 @@ void readPlayerInfo(Player player[], int& n)
 	int lines = 5;
 	fstream fs("playerinfo.txt", ios::in);
 
-	while (!fs.eof())
+	while (fs.peek() != fs.eof())
 	{
 		n++;
 		getline(fs, player[n].name);
@@ -153,8 +153,8 @@ Player signIn()
 {
 	Player p;
 	Player list[100];
-	int playercount;
-	readPlayerInfo(list, playercount);
+	int playercount = 0;
+	//readPlayerInfo(list, playercount);
 	processPlayerInfo(p, list, playercount);
 	return p;
 }

@@ -3,7 +3,7 @@
 
 void generateBoard(Board_1** board);
 void deleteBoard(Board_1** board);
-void displayBoard(Board_1** board);
+void displayBoard(Board_1** board, int delaytime);
 bool checkRowMatch(Board_1** board, int j1, int j2, int i);
 bool checkColMatch(Board_1** board, int i1, int i2, int j);
 bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);

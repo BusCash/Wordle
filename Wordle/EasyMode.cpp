@@ -60,14 +60,14 @@ void deleteBoard(Board_1** board)
 	delete[] board;
 }
 
-void displayBoard(Board_1** board)
+void displayBoard(Board_1** board, int delaytime)
 {
 	for (int i = 1; i < easyHeight + 1; i++)
 	{
 		for (int j = 1; j < easyWidth + 1; j++)
 		{
 			board[i][j].drawCell();
-			Sleep(5);
+			Sleep(delaytime);
 		}
 	}
 }
@@ -567,7 +567,7 @@ bool processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselec
 			{
 				resetPlayingBoard(cell, deletedCount);
 			} while (!checkValidBoard(cell));
-			displayBoard(cell);
+			displayBoard(cell, 5);
 		}
 
 		check = true;
@@ -641,7 +641,7 @@ bool processAction(Board_1** cell, Player& p)
 			else
 				i--;
 			cell[i][j].isStopped = true;
-			playSound();
+			// playSound();
 			break;
 		}
 		case 2:
@@ -651,7 +651,7 @@ bool processAction(Board_1** cell, Player& p)
 			else
 				i += 1;
 			cell[i][j].isStopped = true;
-			playSound();
+			// playSound();
 			break;
 		}
 		case 3:
@@ -661,7 +661,7 @@ bool processAction(Board_1** cell, Player& p)
 			else
 				j -= 1;
 			cell[i][j].isStopped = true;
-			playSound();
+			// playSound();
 			break;
 		}
 		case 4:
@@ -671,7 +671,7 @@ bool processAction(Board_1** cell, Player& p)
 			else
 				j += 1;
 			cell[i][j].isStopped = true;
-			playSound();
+			// playSound();
 			break;
 		}
 		case 5:
@@ -739,8 +739,9 @@ bool processAction(Board_1** cell, Player& p)
 					}
 					break;
 				case 1:
+					pause = false;
 					cell[i][j].isStopped = true;
-					displayBoard(p.board);
+					displayBoard(p.board, 0);
 					showParameter(p);
 					break;
 				case 3:
@@ -773,7 +774,7 @@ void easyMode(Player& p)
 				generateBoard(p.board);
 			} while (!checkValidBoard(p.board));
 		}
-		displayBoard(p.board);
+		displayBoard(p.board, 5);
 		showParameter(p);
 	} while (processAction(p.board, p));
 }
