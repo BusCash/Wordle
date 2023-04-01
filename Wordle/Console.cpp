@@ -1,4 +1,4 @@
-#include "generateConsole.h"
+#include "Console.h"
 
 void gotoxy(int x, int y)
 {
@@ -92,12 +92,6 @@ void drawTitle()
 	cout << "!??:   .??7.  ^???????.  ^?!!  .???J^ ~???????     7?????????7 :?????????J^";
 }
 
-void generateGraphic()
-{
-	drawGraph(5);
-	drawTitle();
-}
-
 int getConsoleInput()
 {
 	int key = _getch();
@@ -117,7 +111,7 @@ int getConsoleInput()
 	{
 		if (key == ENTER || key == SPACEBAR)
 			return 5;
-		else if (key == 104) // h key
+		else if (key == 104) // H key
 			return 6;
 		else if (key == ESC)
 			return 7;
@@ -155,14 +149,11 @@ void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int
 	setColor(7);
 }
 
-int generateMenu()
+int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 {
-	int barX = midWidth - 12, barY = midHeight + 6;
 	int moveY = barY, oldY = barY;
-	string sbarY = "21,23,25,27";
-	string barName = "PLAY,LEADERBOARD,CREDITS,QUIT";
 
-	for (int i = barY; i <= barY + 2 * 3; i += 2)
+	for (int i = barY; i <= barY + 2 * (barNum - 1); i += 2)
 		changeBarStatus(barX, sbarY, i, barName, 0, 15);
 
 	bool check = true;
@@ -186,13 +177,13 @@ int generateMenu()
 			if (moveY != barY)
 				moveY -= 2;
 			else
-				moveY = barY + 2 * 3;
+				moveY = barY + 2 * (barNum - 1);
 			break;
 		}
 		case 2:
 		{
 			check = true;
-			if (moveY != barY + 2 * 3)
+			if (moveY != barY + 2 * (barNum - 1))
 				moveY += 2;
 			else
 				moveY = barY;
@@ -200,16 +191,16 @@ int generateMenu()
 		}
 		case 5:
 		{
-			for (int i = barY; i <= barY + 2 * 3; i += 2)
+			for (int i = barY; i <= barY + 2 * (barNum - 1); i += 2)
 				changeBarStatus(barX, sbarY, i, "", 0, 0);
 
-			if (moveY == 27) // If "QUIT" is selected
+			if (moveY == barY + 2 * (barNum - 1)) // If the last is selected
 				return 0;
-			else if (moveY == 21) // If "PLAY" is selected
+			else if (moveY == barY) // If the first is selected
 				return 1;
-			else if (moveY == 23) // If "LEADERBOARD" is selected
+			else if (barNum > 3 && moveY == barY + 2 * (barNum - 3)) // If the second is selected
 				return 2;
-			else if (moveY == 25) // If "CREDITS" is selected
+			else if (moveY == barY + 2 * (barNum - 2)) // If the third (if exist) is selected
 				return 3;
 		}
 		default:
@@ -227,66 +218,6 @@ void clearConsole()
 		{
 			gotoxy(j, i);
 			cout << " ";
-		}
-	}
-}
-
-int showPlayMenu()
-{
-	int barX = midWidth - 12, barY = midHeight + 7;
-	int moveY = barY, oldY = barY;
-	string sbarY = "22,24,26";
-	string barName = "EASY,HARDCORE,BACK";
-
-	for (int i = barY; i <= barY + 2 * 2; i += 2)
-		changeBarStatus(barX, sbarY, i, barName, 0, 7);
-
-	bool check = true;
-	while (true)
-	{
-		if (check == true)
-		{
-			changeBarStatus(barX, sbarY, oldY, barName, 0, 7);
-			oldY = moveY;
-
-			changeBarStatus(barX, sbarY, moveY, barName, 6, 13);
-			check = false;
-		}
-
-		switch (getConsoleInput())
-		{
-		case 1:
-		{
-			check = true;
-			if (moveY != barY)
-				moveY -= 2;
-			else
-				moveY = barY + 2 * 2;
-			break;
-		}
-		case 2:
-		{
-			check = true;
-			if (moveY != barY + 2 * 2)
-				moveY += 2;
-			else
-				moveY = barY;
-			break;
-		}
-		case 5:
-		{
-			for (int i = barY; i <= barY + 2 * 2; i += 2)
-				changeBarStatus(barX, sbarY, i, "", 0, 0);
-
-			if (moveY == 26) // If "BACK" is selected
-				return 0;
-			else if (moveY == 22) // If "EASY" is selected
-				return 1;
-			else if (moveY == 24) // If "LEADERBOARD" is selected
-				return 2;
-		}
-		default:
-			break;
 		}
 	}
 }
@@ -322,48 +253,42 @@ void getBackground(char bg[][41], string filein)
 	file.close();
 }
 
-void countTimeDown(Time* t)
+void showParameter(Player p)
 {
+	setColor(10);
+	gotoxy(3, 2);
+	cout << "SCORE: ";
+	cout << p.point;
 
-	gotoxy(midWidth - 30, 3);
-	for (int i = 0; i < 60; i++)
+	gotoxy(midWidth - 5, 2);
+	if (p.streak < 5)
+		setColor(7);
+	else if (p.streak < 8)
+		setColor(14);
+	else if (p.streak < 10)
+		setColor(6);
+	else if (p.streak < 13)
+		setColor(12);
+	else
+		setColor(4);
+
+	if (p.streak == 0)
+		cout << "          ";
+	else
 	{
-		if (i >= 50)
-			setColor(10);
-		else if (i >= 40)
-			setColor(2);
-		else if (i >= 30)
-			setColor(14);
-		else if (i >= 20)
-			setColor(6);
-		else if (i >= 10)
-			setColor(12);
-		else
-			setColor(4);
-		putchar(219);
+		cout << "STREAK: ";
+		cout << p.streak;
 	}
 
-	int cell = 60;
-	int dynamicCount = t->min;
-	int staticCount = t->min;
+	setColor(13);
+	gotoxy(gameWidth - 12 - 3, 2);
+	cout << "HINT(H): ";
+	cout << p.hint;
+
 	setColor(7);
-	while (t->min != 0 || t->sec != 0 && !t->isFinish)
-	{
-		if (t->sec == 0 && t->min != 0)
-		{
-			t->min--;
-			t->sec = 59;
-		}
-		else
-			t->sec--;
-		if (dynamicCount == 0)
-		{
-			cell--;
-			gotoxy(43 - 30 + cell, 3);
-			putchar(32);
-			dynamicCount = staticCount;
-		}
-		dynamicCount--;
-		Sleep(1000);
-	}
+}
+
+void playSound()
+{
+	PlaySound(TEXT("D:\\C++\\ProgTech\\Lab\\Project\\pingpong.wav"), NULL, SND_FILENAME);
 }

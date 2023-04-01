@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
+#include <mmsystem.h>
 #include <fstream>
-#include <thread>
 
 #define boardHeight 6
 #define boardWidth 9
@@ -23,31 +23,16 @@ struct Time
 	bool isFinish = false;
 };
 
-struct Player
-{
-	string name;
-	string id;
-	int point = 0;
-	Time easyplaytime = { 1, 30 };
-	Time hardplaytime = { 1, 30 };
-};
-
-struct Position
-{
-	int x, y;
-};
-
 struct Board_1
 {
-	int x, y;
-	int ci, cj;
+	int x, y;   // Coord of the topleft corner of the cell
+	int ci, cj; // Order of the cell
+	int cx, cy; // Coord of the char
 	char c = ' ';
-	int cx, cy;
 
 	bool isStopped = false;
 	bool isSelected = false;
 	bool isValid = true;
-	bool isDeleted = false;
 	bool isHint = false;
 
 	void drawBackgroundCell(char bg[][41]);
@@ -57,3 +42,25 @@ struct Board_1
 
 	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 };
+
+struct Player
+{
+	string name;
+	string id;
+
+	int point = 0;
+	int hint = 0;
+	int streak = 0;
+
+	bool isNew = true;
+	bool isPlaying = false;
+
+	Board_1** board;
+};
+
+struct Position
+{
+	int x, y;
+};
+
+void getBackground(char bg[][41], string filein);

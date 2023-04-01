@@ -129,16 +129,14 @@
   <ItemGroup>
     <ClCompile Include="Cell.cpp" />
     <ClCompile Include="EasyMode.cpp" />
-    <ClCompile Include="generateConsole.cpp" />
-    <ClCompile Include="Leaderboard.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="PlayerInfo.cpp" />
     <ClCompile Include="Wordle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="EasyMode.h" />
-    <ClInclude Include="generateConsole.h" />
-    <ClInclude Include="Leaderboard.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="PlayerInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

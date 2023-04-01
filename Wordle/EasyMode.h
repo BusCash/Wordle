@@ -1,5 +1,5 @@
 #pragma once
-#include "generateConsole.h"
+#include "Console.h"
 
 void generateBoard(Board_1** board);
 void deleteBoard(Board_1** board);
@@ -14,6 +14,6 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);
 bool checkValidBoard(Board_1** board);
 void showMoveSuggestion(Board_1** cell, int i, int j);
 void resetPlayingBoard(Board_1** board, int deletedCount);
-void processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected, int& selectedCount);
-void processAction(Board_1** cell, Player& p);
+bool processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected, int& deletedCount);
+bool processAction(Board_1** cell, Player& p);
 void easyMode(Player& p);

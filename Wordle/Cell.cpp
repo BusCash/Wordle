@@ -1,5 +1,5 @@
 #include "Cell.h"
-#include "generateConsole.h"
+#include "Console.h"
 
 char cell[cellHeight][cellWidth] = {
 	{"     "},
@@ -37,7 +37,6 @@ void Board_1::drawCell()
 		}
 		gotoxy(cx, cy);
 		cout << c;
-		setColor(7);
 		return;
 	}
 	if (isStopped)
@@ -101,7 +100,9 @@ void Board_1::drawCell()
 	{
 		if (isValid)
 		{
-			if (!isSelected)
+			if (isSelected)
+				return;
+			else
 			{
 				// Default cell is YELLOW
 				setColor(14 * 16);
@@ -307,5 +308,4 @@ void Board_1::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2)
 			}
 		}
 	}
-	setColor(7);
 }
