@@ -705,12 +705,6 @@ void easyMode(Player& p)
 		generateBoard(board);
 	} while (!checkValidBoard(board));
 	displayBoard(board);
-
-	thread time(countTimeDown, &p.easyplaytime);
 	processAction(board, p);
-	gotoxy(2, 2);
-	cout << p.easyplaytime.isFinish;
-	time.join();
-
 	deleteBoard(board);
 }

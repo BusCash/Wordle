@@ -2,8 +2,8 @@
 #include "generateConsole.h"
 
 
-void getInfoPlayer(Player player[], int& n);
 bool compareScore(Player a, Player b);
+void getInfoPlayer(Player player[], int& n);
+void saveRecord(Player player[], int n);
 void showLeaderboard();
 void printLeaderboard();
-void saveRecord();
