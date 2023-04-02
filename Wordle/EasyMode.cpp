@@ -2,10 +2,10 @@
 
 void generateBoard(Board_1** board)
 {
-	for (int i = 0; i < boardHeight; i++)
+	for (int i = 0; i < boardEasyHeight; i++)
 	{
-		board[i] = new Board_1[boardWidth];
-		for (int j = 0; j < boardWidth; j++)
+		board[i] = new Board_1[boardEasyWidth];
+		for (int j = 0; j < boardEasyWidth; j++)
 		{
 			// Set the position for the cell
 			board[i][j].x = j * cellWidth + 17;
@@ -22,15 +22,15 @@ void generateBoard(Board_1** board)
 	}
 
 	// Set the edge unavailable
-	for (int i = 0; i < boardHeight; i++)
+	for (int i = 0; i < boardEasyHeight; i++)
 	{
 		board[i][0].isValid = false;
-		board[i][boardWidth - 1].isValid = false;
+		board[i][boardEasyWidth - 1].isValid = false;
 	}
-	for (int j = 0; j < boardWidth; j++)
+	for (int j = 0; j < boardEasyWidth; j++)
 	{
 		board[0][j].isValid = false;
-		board[boardHeight - 1][j].isValid = false;
+		board[boardEasyHeight - 1][j].isValid = false;
 	}
 
 	// Get random character for each 2 cells
@@ -54,7 +54,7 @@ void generateBoard(Board_1** board)
 
 void deleteBoard(Board_1** board)
 {
-	for (int i = 0; i < boardHeight; i++)
+	for (int i = 0; i < boardEasyHeight; i++)
 		delete[] board[i];
 
 	delete[] board;
@@ -127,6 +127,10 @@ bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 
 bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
+	// Check 2 corners created by those points 
+	//	-> If through
+	//	-> Check the 2 lines created by that corner to those points
+
 	if (board[i1][j2].c == ' ')
 		if (checkRowMatch(board, j1, j2, i1) && checkColMatch(board, i1, i2, j2))
 		{
@@ -168,6 +172,8 @@ bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
 	// Check all way in a rectangle created by p1 and p2
+	// Find the point has min j and the point has min i
+
 	Position jmin, jmax;
 	if (j1 < j2)
 	{
@@ -312,7 +318,7 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 		}
 	}
 
-	// Check the left direction
+	// Check left direction
 	if (checkRowMatch(board, jmax.y, jmin.y - 1, jmax.x))
 	{
 		int jnext = jmin.y + upleft;
@@ -448,14 +454,14 @@ bool checkValidBoard(Board_1** board)
 		{
 			for (int j = 1; j < easyWidth + 1; j++)
 			{
-				if (board[i][j].c == check && board[i][j].isValid)
+				if (board[i][j].c == check && board[i][j].isValid) // Save all the check character positions in pos arr
 				{
 					pos[cnt++] = i;
 					pos[cnt++] = j;
 				}
 			}
 		}
-		for (int i = 0; i < cnt - 2; i += 2)
+		for (int i = 0; i < cnt - 2; i += 2) // Pos arr stores the pos of 1 char in i and i+1;
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 				if (checkMatch(board, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Check if there are any ways lefts
@@ -468,10 +474,16 @@ bool checkValidBoard(Board_1** board)
 
 void resetPlayingBoard(Board_1** board, int deletedCount)
 {
-	for (int i = 1; i < easyHeight + 1; i++)
-		for (int j = 1; j < easyWidth + 1; j++)
-			if (board[i][j].isValid)
-				board[i][j].c = ' ';
+	if (deletedCount == 0)
+		for (int i = 1; i < easyHeight + 1; i++)
+			for (int j = 1; j < easyWidth + 1; j++)
+				board[i][j].isValid = true;
+	else
+		for (int i = 1; i < easyHeight + 1; i++)
+			for (int j = 1; j < easyWidth + 1; j++)
+				if (board[i][j].isValid)
+					board[i][j].c = ' ';
+
 
 	int restCount = (easyHeight * easyWidth - deletedCount) / 2;
 	while (restCount)
@@ -515,12 +527,14 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 			{
-				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Check if there are any ways left
+				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Find 2 match cell -> show it 0,2s
 				{
 					cell[pos[i]][pos[i + 1]].isHint = true;
 					cell[pos[j]][pos[j + 1]].isHint = true;
 					cell[pos[i]][pos[i + 1]].drawCell();
 					cell[pos[j]][pos[j + 1]].drawCell();
+
+					playSound(2);
 					Sleep(200);
 
 					cell[pos[i]][pos[i + 1]].isHint = false;
@@ -541,50 +555,62 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 	}
 }
 
-bool processSelectedCell(Board_1** cell, int i, int j, int iselected, int jselected, int& deletedCount)
+bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount)
 {
-	cell[i][j].drawCell(); // Set the selected cell;
+	p.eboard[i][j].drawCell(); // Set the selected cell;
 	Sleep(200);
 
-	cell[iselected][jselected].isSelected = false;
-	cell[i][j].isSelected = false;
+	p.eboard[iselected][jselected].isSelected = false;
+	p.eboard[i][j].isSelected = false;
 
 	bool check = false;
 
-	if (checkMatch(cell, iselected, jselected, i, j, 0))
+	if (checkMatch(p.eboard, iselected, jselected, i, j, 0)) // If match -> delete cell
 	{
-		cell[iselected][jselected].deleteCell(7);
-		cell[i][j].deleteCell(7);
+		if (p.streak < 5)
+			playSound(5);
+		else if (p.streak < 8)
+			playSound(6);
+		else if (p.streak < 10)
+			playSound(7);
+		else if (p.streak < 13)
+			playSound(8);
+		else
+			playSound(9);
 
-		cell[iselected][jselected].c = ' ';
-		cell[i][j].c = ' ';
+		p.eboard[iselected][jselected].deleteCell(7);
+		p.eboard[i][j].deleteCell(7);
+
+		p.eboard[iselected][jselected].c = ' ';
+		p.eboard[i][j].c = ' ';
 
 		deletedCount += 2;
 
-		if (!checkValidBoard(cell) && deletedCount != 28)
+		if (!checkValidBoard(p.eboard) && deletedCount != easyHeight * easyWidth)
 		{
 			do
 			{
-				resetPlayingBoard(cell, deletedCount);
-			} while (!checkValidBoard(cell));
-			displayBoard(cell, 5);
+				resetPlayingBoard(p.eboard, deletedCount);
+			} while (!checkValidBoard(p.eboard));
+			displayBoard(p.eboard, 5);
 		}
 
 		check = true;
 	}
 	else
 	{
-		cell[iselected][jselected].isValid = true;
-		cell[i][j].isValid = true;
+		playSound(4);
+		p.eboard[iselected][jselected].isValid = true;
+		p.eboard[i][j].isValid = true;
 
 		// Set the old selected cell back to default
-		cell[iselected][jselected].drawCell();
+		p.eboard[iselected][jselected].drawCell();
 	}
 
-	// When done process set the current standing cell
-	cell[i][j].isStopped = true;
-	cell[i][j].drawCell();
-	cell[i][j].isStopped = false;
+	// When done process -> set the current standing cell
+	p.eboard[i][j].isStopped = true;
+	p.eboard[i][j].drawCell();
+	p.eboard[i][j].isStopped = false;
 
 	return check;
 }
@@ -620,8 +646,6 @@ bool processAction(Board_1** cell, Player& p)
 
 	while (true)
 	{
-		if (deletedCount == 28)
-			return false;
 		if (cell[i][j].isStopped)
 		{
 			cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
@@ -632,46 +656,68 @@ bool processAction(Board_1** cell, Player& p)
 			cell[i][j].isStopped = false;
 		}
 
-		switch (getConsoleInput())
+		// If the game is completed
+		if (deletedCount == easyHeight * easyWidth)
 		{
-		case 1:
+			clearConsole();
+			p.isFinised = true;
+			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,BACK TO MAIN MENU,JUST QUIT", 4))
+			{
+			case 0: // If quit and don't save
+				p.isPlaying = false;
+				deleteBoard(p.eboard);
+				clearConsole();
+				return false;
+			case 1: // If continue playing with the current parameter
+				p.isPlaying = true;
+				return true;
+			case 2: // If continue playing with new parameter
+				p.isPlaying = false;
+				deleteBoard(p.eboard);
+				return true;
+			case 3: // If quit and save parameter
+				p.isPlaying = true;
+				clearConsole();
+				return false;
+			}
+		}
+
+		switch (getConsoleInput()) // Take input from keyboard
+		{
+		case 1: // UP
 		{
 			if (i == 1)
 				i = easyHeight;
 			else
 				i--;
 			cell[i][j].isStopped = true;
-			// playSound();
 			break;
 		}
-		case 2:
+		case 2: // DOWN
 		{
 			if (i == easyHeight)
 				i = 1;
 			else
 				i += 1;
 			cell[i][j].isStopped = true;
-			// playSound();
 			break;
 		}
-		case 3:
+		case 3: // LEFT
 		{
 			if (j == 1)
 				j = easyWidth;
 			else
 				j -= 1;
 			cell[i][j].isStopped = true;
-			// playSound();
 			break;
 		}
-		case 4:
+		case 4: // RIGHT
 		{
 			if (j == easyWidth)
 				j = 1;
 			else
 				j += 1;
 			cell[i][j].isStopped = true;
-			// playSound();
 			break;
 		}
 		case 5:
@@ -689,22 +735,27 @@ bool processAction(Board_1** cell, Player& p)
 					jselected = j;
 				}
 				selectedCount--;
-				if (selectedCount == 0)
+				if (selectedCount == 0) // If 2 cells are selected -> check match
 				{
 					selectedCount = 2;
-					if (processSelectedCell(cell, i, j, iselected, jselected, deletedCount))
+					if (processSelectedCell(p, i, j, iselected, jselected, deletedCount))
 						p.streak++;
 					else
 						p.streak = 0;
 					processPoint(p);
 				}
 			}
-			else if (cell[i][j].isSelected && !cell[i][j].isValid) // If a selected cell is selected again --> unselected
+			else if (cell[i][j].isSelected && !cell[i][j].isValid) // If a selected cell is selected again -> unselected
 			{
 				cell[i][j].isSelected = false;
 				cell[i][j].isValid = true;
 				cell[i][j].isStopped = true;
 				selectedCount = 2;
+			}
+			else if (!cell[i][j].isSelected && !cell[i][j].isValid) // If an unvalid cell is selected
+			{
+				PlaySound(NULL, NULL, 0);
+				playSound(3);
 			}
 			break;
 		}
@@ -717,7 +768,7 @@ bool processAction(Board_1** cell, Player& p)
 			}
 			break;
 		}
-		case 7:
+		case 7: // If ESC is pressed
 		{
 			clearConsole();
 			bool pause = true;
@@ -725,27 +776,29 @@ bool processAction(Board_1** cell, Player& p)
 			{
 				switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "RESUME,RESTART,QUIT", 3))
 				{
-				case 0:
+				case 0: // If QUIT is selected
 					switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "SAVE,DON'T SAVE,BACK", 3))
 					{
-					case 0:
+					case 0: // BACK
 						break;
-					case 1:
+					case 1: // SAVE
 						p.isPlaying = true;
 						return false;
-					case 3:
-						deleteBoard(p.board);
+					case 3: // DON'T SAVE
+						p.isPlaying = false;
+						deleteBoard(p.eboard);
 						return false;
 					}
 					break;
-				case 1:
+				case 1: // If RESUME -> go back
 					pause = false;
 					cell[i][j].isStopped = true;
-					displayBoard(p.board, 0);
+					displayBoard(p.eboard, 0);
 					showParameter(p);
 					break;
-				case 3:
-					deleteBoard(p.board);
+				case 3: // If RESTART -> delete
+					p.isPlaying = false;
+					deleteBoard(p.eboard);
 					return true;
 				}
 			}
@@ -761,20 +814,37 @@ bool processAction(Board_1** cell, Player& p)
 void easyMode(Player& p)
 {
 	srand(time(0));
+	// If player want to continue playing
 	do
 	{
-		if (!p.isPlaying)
+		// Check if the board is being played or not
+		if (!p.isPlaying) // If no -> reset new board
 		{
+			clearConsole();
 			p.streak = 0;
 			p.point = 0;
 			p.hint = 3;
-			p.board = new Board_1 * [gameHeight];
 			do
 			{
-				generateBoard(p.board);
-			} while (!checkValidBoard(p.board));
+				p.eboard = new Board_1 * [boardEasyHeight];
+				generateBoard(p.eboard);
+				if (!checkValidBoard(p.eboard))
+					deleteBoard(p.eboard);
+			} while (!checkValidBoard(p.eboard));
 		}
-		displayBoard(p.board, 5);
+		else // If yes -> check if the board is finished
+		{
+			if (p.isFinised) // If yes -> reset new board
+			{
+				clearConsole();
+				do
+				{
+					resetPlayingBoard(p.eboard, 0);
+				} while (!checkValidBoard(p.eboard));
+				p.isFinised = false;
+			}
+		}
+		displayBoard(p.eboard, 5);
 		showParameter(p);
-	} while (processAction(p.board, p));
+	} while (processAction(p.eboard, p));
 }

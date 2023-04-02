@@ -99,18 +99,34 @@ int getConsoleInput()
 	{
 		key = _getch();
 		if (key == UP)
+		{
+			playSound(0);
 			return 1;
+		}
 		else if (key == DOWN)
+		{
+			playSound(0);
 			return 2;
+		}
 		else if (key == LEFT)
+		{
+			playSound(0);
 			return 3;
+		}
 		else if (key == RIGHT)
+		{
+			playSound(0);
 			return 4;
+		}
+
 	}
 	else
 	{
 		if (key == ENTER || key == SPACEBAR)
+		{
+			playSound(1);
 			return 5;
+		}
 		else if (key == 104) // H key
 			return 6;
 		else if (key == ESC)
@@ -200,7 +216,7 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 				return 1;
 			else if (barNum > 3 && moveY == barY + 2 * (barNum - 3)) // If the second is selected
 				return 2;
-			else if (moveY == barY + 2 * (barNum - 2)) // If the third (if exist) is selected
+			else if (barNum > 2 && moveY == barY + 2 * (barNum - 2)) // If the third (if exist) is selected
 				return 3;
 		}
 		default:
@@ -240,13 +256,13 @@ void showCredits()
 	setColor(7);
 }
 
-void getBackground(char bg[][41], string filein)
+void getBackground(char bg[][65], int m, int n, string filein)
 {
 	ifstream file;
 	file.open(filein, ios::in);
-	for (int i = 0; i < 15; i++)
+	for (int i = 0; i < m; i++)
 	{
-		for (int j = 0; j < 41; j++)
+		for (int j = 0; j < n; j++)
 			bg[i][j] = file.get();
 		file.ignore();
 	}
@@ -288,7 +304,8 @@ void showParameter(Player p)
 	setColor(7);
 }
 
-//void playSound()
-//{
-//	PlaySound(TEXT("D:\\C++\\ProgTech\\Lab\\Project\\pingpong.wav"), NULL, SND_FILENAME | SND_ASYNC);
-//}
+void playSound(int i)
+{
+	const wchar_t* soundfile[10] = { L"sound\\move.wav", L"sound\\enter.wav", L"sound\\hint.wav", L"sound\\error.wav", L"sound\\wrong.wav", L"sound\\streak1.wav", L"sound\\streak2.wav", L"sound\\streak3.wav", L"sound\\streak4.wav", L"sound\\streak5.wav" };
+	PlaySound(soundfile[i], NULL, SND_FILENAME | SND_ASYNC);
+}

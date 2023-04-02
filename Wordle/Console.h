@@ -27,6 +27,6 @@ int getConsoleInput();
 int generateMenu(int barX, int barY, string sbarY, string barName, int barNum);
 void clearConsole();
 void showCredits();
-void getBackground(char bg[][41], string filein);
+void getBackground(char[][65], int m, int n, string filein);
 void showParameter(Player p);
-void playSound();
+void playSound(int i);

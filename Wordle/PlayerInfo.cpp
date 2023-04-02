@@ -32,6 +32,7 @@ void showWordDisplayEffect(string s)
 	for (int i = 0; i < s.length(); i++)
 	{
 		cout << s[i];
+		playSound(2);
 		Sleep(100);
 	}
 }

@@ -1,6 +1,7 @@
 #include "Console.h"
-#include "EasyMode.h"
 #include "PlayerInfo.h"
+#include "EasyMode.h"
+#include "hardMode.h"
 
 int main()
 {
@@ -14,7 +15,25 @@ int main()
 		switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "PLAY,LEADERBOARD,CREDITS,QUIT", 4))
 		{
 		case 0:
-			quit = true;
+			if (p.isPlaying)
+			{
+				setColor(12);
+				gotoxy(midWidth - 25, midHeight + 2);
+				cout << "YOU STILL HAVE NOT COMPLETED THE CURRENT STAGE GAME";
+				gotoxy(midWidth - 17, midHeight + 3);
+				cout << "QUIT GAME WILL NOT SAVE YOUR STAGE";
+				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "QUIT,BACK", 2))
+				{
+				case 0:
+					quit = true;
+					deleteBoard(p.eboard);
+					break;
+				case 1:
+					break;
+				}
+			}
+			else
+				quit = true;
 			break;
 		case 1:
 		{
@@ -27,6 +46,8 @@ int main()
 				easyMode(p);
 				break;
 			case 3:
+				clearConsole();
+				hardMode(p);
 				break;
 			}
 			break;
