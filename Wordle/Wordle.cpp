@@ -1,4 +1,4 @@
-#include "Console.h"
+#include "ConsoleAndUtility.h"
 #include "PlayerInfo.h"
 #include "EasyMode.h"
 #include "hardMode.h"
@@ -15,7 +15,7 @@ int main()
 		switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "PLAY,LEADERBOARD,CREDITS,QUIT", 4))
 		{
 		case 0:
-			if (p.isPlaying)
+			if (p.easy.isPlaying || p.hard.isPlaying)
 			{
 				setColor(12);
 				gotoxy(midWidth - 25, midHeight + 2);

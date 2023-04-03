@@ -28,5 +28,5 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum);
 void clearConsole();
 void showCredits();
 void getBackground(char[][65], int m, int n, string filein);
-void showParameter(Player p);
+void showParameter(Player p, string mode);
 void playSound(int i);

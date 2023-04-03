@@ -1,4 +1,4 @@
-#include "Console.h"
+#include "ConsoleAndUtility.h"
 
 void gotoxy(int x, int y)
 {
@@ -269,37 +269,51 @@ void getBackground(char bg[][65], int m, int n, string filein)
 	file.close();
 }
 
-void showParameter(Player p)
+void showParameter(Player p, string mode)
 {
+	int point, streak, hint;
+	if (mode == "easy")
+	{
+		point = p.easy.point;
+		streak = p.easy.streak;
+		hint = p.easy.hint;
+	}
+	else
+	{
+		point = p.hard.point;
+		streak = p.hard.streak;
+		hint = p.hard.hint;
+	}
+
 	setColor(10);
 	gotoxy(3, 2);
 	cout << "SCORE: ";
-	cout << p.point;
+	cout << point;
 
 	gotoxy(midWidth - 5, 2);
-	if (p.streak < 5)
+	if (streak < 5)
 		setColor(7);
-	else if (p.streak < 8)
+	else if (streak < 8)
 		setColor(14);
-	else if (p.streak < 10)
+	else if (streak < 10)
 		setColor(6);
-	else if (p.streak < 13)
+	else if (streak < 13)
 		setColor(12);
 	else
 		setColor(4);
 
-	if (p.streak == 0)
+	if (streak == 0)
 		cout << "          ";
 	else
 	{
 		cout << "STREAK: ";
-		cout << p.streak;
+		cout << streak;
 	}
 
 	setColor(13);
 	gotoxy(gameWidth - 12 - 3, 2);
 	cout << "HINT(H): ";
-	cout << p.hint;
+	cout << hint;
 
 	setColor(7);
 }

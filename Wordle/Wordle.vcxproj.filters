@@ -24,7 +24,7 @@
     <ClCompile Include="EasyMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Console.cpp">
+    <ClCompile Include="ConsoleAndUtility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PlayerInfo.cpp">
@@ -41,7 +41,7 @@
     <ClInclude Include="EasyMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Console.h">
+    <ClInclude Include="ConsoleAndUtility.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PlayerInfo.h">

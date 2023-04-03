@@ -1,2 +1,0 @@
-name,id,point
-name2,id2,point2

@@ -39,11 +39,16 @@ struct Board_1
 	bool isValid = true;
 	bool isHint = false;
 
+	// Draw background when a cell is deleted
 	void drawBackgroundCell(char bg[][65]);
 
+	// Adjust a cell status
 	void drawCell();
+
+	// Delete cell and arrow
 	void deleteCell(int color);
 
+	// Draw arrow when match
 	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 };
 
@@ -69,11 +74,8 @@ struct Board_2
 	Board_2* next;
 };
 
-struct Player
+struct Parameter
 {
-	string name;
-	string id;
-
 	int point = 0;
 	int hint = 0;
 	int streak = 0;
@@ -81,6 +83,15 @@ struct Player
 	bool isNew = true;
 	bool isPlaying = false;
 	bool isFinised = false;
+};
+
+struct Player
+{
+	string name;
+	string id;
+
+	Parameter easy;
+	Parameter hard;
 
 	Board_1** eboard;
 	Board_2** hboard;

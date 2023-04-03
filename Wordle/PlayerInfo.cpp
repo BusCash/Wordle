@@ -37,23 +37,23 @@ void showWordDisplayEffect(string s)
 	}
 }
 
-void readPlayerInfo(Player player[], int& n)
-{
-	n = -1;
-	int y = midHeight;
-	int lines = 5;
-	fstream fs("playerinfo.txt", ios::in);
-
-	while (fs.peek() != fs.eof())
-	{
-		n++;
-		getline(fs, player[n].name);
-		getline(fs, player[n].id);
-		fs >> player[n].point;
-		fs.ignore();
-	}
-	fs.close();
-}
+//void readPlayerInfo(Player player[], int& n)
+//{
+//	n = -1;
+//	int y = midHeight;
+//	int lines = 5;
+//	fstream fs("playerinfo.txt", ios::in);
+//
+//	while (fs.peek() != fs.eof())
+//	{
+//		n++;
+//		getline(fs, player[n].name);
+//		getline(fs, player[n].id);
+//		fs >> player[n].point;
+//		fs.ignore();
+//	}
+//	fs.close();
+//}
 
 Player getPlayerInfo(bool newbie)
 {
@@ -160,52 +160,64 @@ Player signIn()
 	return p;
 }
 
-bool compareScore(Player a, Player b)
+bool compareScore(Player a, Player b, string mode)
 {
-	if (a.point < b.point)
+	int apoint, bpoint;
+	if (mode == "easy")
+	{
+		apoint = a.easy.point;
+		bpoint = b.easy.point;
+	}
+	else
+	{
+		apoint = a.hard.point;
+		bpoint = b.hard.point;
+	}
+
+	if (apoint < bpoint)
 		return true;
 	return false;
 }
 
-void saveRecord(Player player[], int n)
-{
-	ofstream ofs("playerinfo.txt", ios::app);
-	for (int i = 0; i < n; ++i)
-	{
-		ofs << player[i].name << " " << player[i].id << " " << player[i].point << endl;
-	}
-	ofs.close();
-}
+//void saveRecord(Player player[], int n)
+//{
+//	ofstream ofs("playerinfo.txt", ios::app);
+//	for (int i = 0; i < n; ++i)
+//	{
+//		ofs << player[i].name << " " << player[i].id << " " << player[i].point << endl;
+//	}
+//	ofs.close();
+//}
 
-void printLeaderboard()
-{
-	int n = 0;
-	int y = midHeight;
-	Player player[100];
-	readPlayerInfo(player, n);
-	int lines = 5;
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = i + 1; j < n; j++)
-		{
-			if (compareScore(player[i], player[j]))
-			{
-				swap(player[i], player[j]);
-			}
-		}
-	}
-	for (int i = 1; i < lines; i++)
-	{
-		gotoxy(midWidth - 10, y);
-		cout << player[i - 1].name;
-		gotoxy(midWidth, y);
-		cout << player[i - 1].id;
-		gotoxy(midWidth + 10, y);
-		cout << player[i - 1].point;
-		y += 2;
-	}
-	saveRecord(player, n);
-}
+//void printLeaderboard()
+//{
+//	int n = 0;
+//	int y = midHeight;
+//	Player player[100];
+//	readPlayerInfo(player, n);
+//	int lines = 5;
+//	for (int i = 0; i < n; i++)
+//	{
+//		for (int j = i + 1; j < n; j++)
+//		{
+//			if (compareScore(player[i], player[j]))
+//			{
+//				swap(player[i], player[j]);
+//			}
+//		}
+//	}
+//	for (int i = 1; i < lines; i++)
+//	{
+//		gotoxy(midWidth - 10, y);
+//		cout << player[i - 1].name;
+//		gotoxy(midWidth, y);
+//		cout << player[i - 1].id;
+//		gotoxy(midWidth + 10, y);
+//		cout << player[i - 1].point;
+//		y += 2;
+//	}
+//	saveRecord(player, n);
+//}
 
 void showLeaderboard()
 {

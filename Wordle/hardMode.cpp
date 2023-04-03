@@ -642,13 +642,13 @@ int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected
 
 	if (checkMatch(p.hboard, iselected, jselected, i, j, 0)) // If match -> delete cell
 	{
-		if (p.streak < 5)
+		if (p.hard.streak < 5)
 			playSound(5);
-		else if (p.streak < 8)
+		else if (p.hard.streak < 8)
 			playSound(6);
-		else if (p.streak < 10)
+		else if (p.hard.streak < 10)
 			playSound(7);
-		else if (p.streak < 13)
+		else if (p.hard.streak < 13)
 			playSound(8);
 		else
 			playSound(9);
@@ -689,6 +689,24 @@ int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected
 	return check;
 }
 
+void processHardPoint(Player& p)
+{
+	if (p.hard.streak == 0)
+		return;
+	if (p.hard.streak < 5)
+		p.hard.point += 5;
+	else if (p.hard.streak < 8)
+		p.hard.point += 5 * p.hard.streak;
+	else if (p.hard.streak < 10)
+		p.hard.point += 15 * p.hard.streak;
+	else if (p.hard.streak == 10)
+		p.hard.point += 15 * p.hard.streak + 500;
+	else if (p.hard.streak < 14)
+		p.hard.point += (5 + p.hard.streak) * p.hard.streak + (p.hard.streak - 5) * 100;
+	else
+		p.hard.point += (5 + p.hard.streak) * p.hard.streak + 1005;
+}
+
 bool processAction(Board_2** cell, Player& p)
 {
 	int i = 1, j = 1;
@@ -726,34 +744,34 @@ bool processAction(Board_2** cell, Player& p)
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "RESTART,BACK TO MAIN MENU", 2))
 				{
 				case 0:
-					p.isPlaying = false;
+					p.hard.isPlaying = false;
 					deleteBoard(p.hboard);
 					return false;
 				case 1:
-					p.isPlaying = false;
+					p.hard.isPlaying = false;
 					deleteBoard(p.hboard);
 					return true;
 				}
 			}
 			else
 			{
-				p.isFinised = true;
+				p.hard.isFinised = true;
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,SAVE AND MAIN MENU,JUST QUIT", 4))
 				{
 				case 0: // If quit and don't save
-					p.isPlaying = false;
+					p.hard.isPlaying = false;
 					deleteBoard(p.hboard);
 					clearConsole();
 					return false;
 				case 1: // If continue playing with the current parameter
-					p.isPlaying = true;
+					p.hard.isPlaying = true;
 					return true;
 				case 2: // If continue playing with new parameter
-					p.isPlaying = false;
+					p.hard.isPlaying = false;
 					deleteBoard(p.hboard);
 					return true;
 				case 3: // If quit and save parameter
-					p.isPlaying = true;
+					p.hard.isPlaying = true;
 					clearConsole();
 					return false;
 				}
@@ -820,15 +838,15 @@ bool processAction(Board_2** cell, Player& p)
 					selectedCount = 2;
 					int checkselectecd = processSelectedHardCell(p, i, j, iselected, jselected, deletedCount);
 					if (checkselectecd == 1)
-						p.streak++;
+						p.hard.streak++;
 					else if (checkselectecd == 0)
-						p.streak = 0;
+						p.hard.streak = 0;
 					else
 					{
 						deletedCount = hardHeight * hardWidth;
 						win = false;
 					}
-					processPoint(p);
+					processHardPoint(p);
 				}
 			}
 			else if (findNode(cell, i, j)->isSelected && !findNode(cell, i, j)->isValid) // If a selected cell is selected again -> unselected
@@ -847,10 +865,10 @@ bool processAction(Board_2** cell, Player& p)
 		}
 		case 6:
 		{
-			if (p.hint)
+			if (p.hard.hint)
 			{
 				showMoveSuggestion(cell, i, j);
-				p.hint--;
+				p.hard.hint--;
 			}
 			break;
 		}
@@ -868,10 +886,10 @@ bool processAction(Board_2** cell, Player& p)
 					case 0: // BACK
 						break;
 					case 1: // SAVE
-						p.isPlaying = true;
+						p.hard.isPlaying = true;
 						return false;
 					case 3: // DON'T SAVE
-						p.isPlaying = false;
+						p.hard.isPlaying = false;
 						deleteBoard(p.hboard);
 						return false;
 					}
@@ -880,10 +898,10 @@ bool processAction(Board_2** cell, Player& p)
 					pause = false;
 					findNode(cell, i, j)->isStopped = true;
 					displayBoard(p.hboard, 0);
-					showParameter(p);
+					showParameter(p, "hard");
 					break;
 				case 3: // If RESTART -> delete
-					p.isPlaying = false;
+					p.hard.isPlaying = false;
 					deleteBoard(p.hboard);
 					return true;
 				}
@@ -893,7 +911,7 @@ bool processAction(Board_2** cell, Player& p)
 			break;
 		}
 
-		showParameter(p);
+		showParameter(p, "hard");
 	}
 }
 
@@ -904,12 +922,12 @@ void hardMode(Player& p)
 	do
 	{
 		// Check if the board is being played or not
-		if (!p.isPlaying) // If no -> reset new board
+		if (!p.hard.isPlaying) // If no -> reset new board
 		{
 			clearConsole();
-			p.streak = 0;
-			p.point = 0;
-			p.hint = 2;
+			p.hard.streak = 0;
+			p.hard.point = 0;
+			p.hard.hint = 2;
 			do
 			{
 				p.hboard = new Board_2 * [boardHardHeight];
@@ -920,17 +938,17 @@ void hardMode(Player& p)
 		}
 		else // If yes -> check if the board is finished
 		{
-			if (p.isFinised) // If yes -> reset new board
+			if (p.hard.isFinised) // If yes -> reset new board
 			{
 				clearConsole();
 				do
 				{
 					resetPlayingBoard(p.hboard);
 				} while (!checkValidBoard(p.hboard));
-				p.isFinised = false;
+				p.hard.isFinised = false;
 			}
 		}
 		displayBoard(p.hboard, 5);
-		showParameter(p);
+		showParameter(p, "hard");
 	} while (processAction(p.hboard, p));
 }

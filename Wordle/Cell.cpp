@@ -1,5 +1,5 @@
 #include "Cell.h"
-#include "Console.h"
+#include "ConsoleAndUtility.h"
 
 char cell[cellHeight][cellWidth] = {
 	{"     "},
@@ -155,7 +155,7 @@ void Board_1::deleteCell(int color)
 	}
 
 	char bg[15][65];
-	getBackground(bg, 15, 41, "text file\\background\\bg.txt");
+	getBackground(bg, 15, 41, "background\\bg.txt");
 	if (ci != 0 && ci != 5 && cj != 0 && cj != 8)
 		drawBackgroundCell(bg);
 }
@@ -438,7 +438,7 @@ void Board_2::deleteCell(int color)
 		gotoxy(cx - 1, cy);
 		cout << cell[0];
 
-		if (ci != 12)
+		if (ci != 7)
 		{
 			gotoxy(x, y + cellHeight);
 			cout << cell[0];
@@ -467,7 +467,7 @@ void Board_2::deleteCell(int color)
 	}
 
 	char bg[23][65];
-	getBackground(bg, 23, 65, "text file\\background\\bg.txt");
+	getBackground(bg, 23, 65, "background\\bg.txt");
 	if (ci != 0 && ci != 7 && cj != 0 && cj != 12)
 		drawBackgroundCell(bg);
 }

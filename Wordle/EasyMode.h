@@ -1,5 +1,5 @@
 #pragma once
-#include "Console.h"
+#include "ConsoleAndUtility.h"
 
 // Create board
 void generateBoard(Board_1** board);

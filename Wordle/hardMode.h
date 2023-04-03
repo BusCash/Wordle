@@ -1,7 +1,7 @@
 #pragma once
-#include "Console.h"
-#include "Easymode.h"
+#include "ConsoleAndUtility.h"
 
+// Add node to the back of line
 void addTail(Board_2*& head, Board_2* newnode);
 
 // Find the node in pos [i][j]
@@ -38,6 +38,9 @@ void resetPlayingBoard(Board_2** board);
 
 // Handle the 2 selected cells
 int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount);
+
+// Calculate point and streak
+void processHardPoint(Player& p);
 
 // Handle the action of player
 bool processAction(Board_2** cell, Player& p);

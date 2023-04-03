@@ -567,13 +567,13 @@ bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, i
 
 	if (checkMatch(p.eboard, iselected, jselected, i, j, 0)) // If match -> delete cell
 	{
-		if (p.streak < 5)
+		if (p.easy.streak < 5)
 			playSound(5);
-		else if (p.streak < 8)
+		else if (p.easy.streak < 8)
 			playSound(6);
-		else if (p.streak < 10)
+		else if (p.easy.streak < 10)
 			playSound(7);
-		else if (p.streak < 13)
+		else if (p.easy.streak < 13)
 			playSound(8);
 		else
 			playSound(9);
@@ -617,20 +617,20 @@ bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, i
 
 void processPoint(Player& p)
 {
-	if (p.streak == 0)
+	if (p.easy.streak == 0)
 		return;
-	if (p.streak < 5)
-		p.point += 5;
-	else if (p.streak < 8)
-		p.point += 5 * p.streak;
-	else if (p.streak < 10)
-		p.point += 15 * p.streak;
-	else if (p.streak == 10)
-		p.point += 15 * p.streak + 500;
-	else if (p.streak < 14)
-		p.point += (5 + p.streak) * p.streak + (p.streak - 5) * 100;
+	if (p.easy.streak < 5)
+		p.easy.point += 5;
+	else if (p.easy.streak < 8)
+		p.easy.point += 5 * p.easy.streak;
+	else if (p.easy.streak < 10)
+		p.easy.point += 15 * p.easy.streak;
+	else if (p.easy.streak == 10)
+		p.easy.point += 15 * p.easy.streak + 500;
+	else if (p.easy.streak < 14)
+		p.easy.point += (5 + p.easy.streak) * p.easy.streak + (p.easy.streak - 5) * 100;
 	else
-		p.point += (5 + p.streak) * p.streak + 1005;
+		p.easy.point += (5 + p.easy.streak) * p.easy.streak + 1005;
 }
 
 bool processAction(Board_1** cell, Player& p)
@@ -660,23 +660,23 @@ bool processAction(Board_1** cell, Player& p)
 		if (deletedCount == easyHeight * easyWidth)
 		{
 			clearConsole();
-			p.isFinised = true;
+			p.easy.isFinised = true;
 			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,BACK TO MAIN MENU,JUST QUIT", 4))
 			{
 			case 0: // If quit and don't save
-				p.isPlaying = false;
+				p.easy.isPlaying = false;
 				deleteBoard(p.eboard);
 				clearConsole();
 				return false;
 			case 1: // If continue playing with the current parameter
-				p.isPlaying = true;
+				p.easy.isPlaying = true;
 				return true;
 			case 2: // If continue playing with new parameter
-				p.isPlaying = false;
+				p.easy.isPlaying = false;
 				deleteBoard(p.eboard);
 				return true;
 			case 3: // If quit and save parameter
-				p.isPlaying = true;
+				p.easy.isPlaying = true;
 				clearConsole();
 				return false;
 			}
@@ -739,9 +739,9 @@ bool processAction(Board_1** cell, Player& p)
 				{
 					selectedCount = 2;
 					if (processSelectedCell(p, i, j, iselected, jselected, deletedCount))
-						p.streak++;
+						p.easy.streak++;
 					else
-						p.streak = 0;
+						p.easy.streak = 0;
 					processPoint(p);
 				}
 			}
@@ -761,10 +761,10 @@ bool processAction(Board_1** cell, Player& p)
 		}
 		case 6:
 		{
-			if (p.hint)
+			if (p.easy.hint)
 			{
 				showMoveSuggestion(cell, i, j);
-				p.hint--;
+				p.easy.hint--;
 			}
 			break;
 		}
@@ -782,10 +782,10 @@ bool processAction(Board_1** cell, Player& p)
 					case 0: // BACK
 						break;
 					case 1: // SAVE
-						p.isPlaying = true;
+						p.easy.isPlaying = true;
 						return false;
 					case 3: // DON'T SAVE
-						p.isPlaying = false;
+						p.easy.isPlaying = false;
 						deleteBoard(p.eboard);
 						return false;
 					}
@@ -794,10 +794,10 @@ bool processAction(Board_1** cell, Player& p)
 					pause = false;
 					cell[i][j].isStopped = true;
 					displayBoard(p.eboard, 0);
-					showParameter(p);
+					showParameter(p, "easy");
 					break;
 				case 3: // If RESTART -> delete
-					p.isPlaying = false;
+					p.easy.isPlaying = false;
 					deleteBoard(p.eboard);
 					return true;
 				}
@@ -807,7 +807,7 @@ bool processAction(Board_1** cell, Player& p)
 			break;
 		}
 
-		showParameter(p);
+		showParameter(p, "easy");
 	}
 }
 
@@ -818,12 +818,12 @@ void easyMode(Player& p)
 	do
 	{
 		// Check if the board is being played or not
-		if (!p.isPlaying) // If no -> reset new board
+		if (!p.easy.isPlaying) // If no -> reset new board
 		{
 			clearConsole();
-			p.streak = 0;
-			p.point = 0;
-			p.hint = 3;
+			p.easy.streak = 0;
+			p.easy.point = 0;
+			p.easy.hint = 3;
 			do
 			{
 				p.eboard = new Board_1 * [boardEasyHeight];
@@ -834,17 +834,17 @@ void easyMode(Player& p)
 		}
 		else // If yes -> check if the board is finished
 		{
-			if (p.isFinised) // If yes -> reset new board
+			if (p.easy.isFinised) // If yes -> reset new board
 			{
 				clearConsole();
 				do
 				{
 					resetPlayingBoard(p.eboard, 0);
 				} while (!checkValidBoard(p.eboard));
-				p.isFinised = false;
+				p.easy.isFinised = false;
 			}
 		}
 		displayBoard(p.eboard, 5);
-		showParameter(p);
+		showParameter(p, "easy");
 	} while (processAction(p.eboard, p));
 }
