@@ -1,7 +1,8 @@
 #include "ConsoleAndUtility.h"
 #include "PlayerInfo.h"
 #include "EasyMode.h"
-#include "hardMode.h"
+#include "HardMode.h"
+#include "Hack.h"
 
 int main()
 {

@@ -30,7 +30,10 @@
     <ClCompile Include="PlayerInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="hardMode.cpp">
+    <ClCompile Include="HardMode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Hack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,7 +50,10 @@
     <ClInclude Include="PlayerInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hardMode.h">
+    <ClInclude Include="HardMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

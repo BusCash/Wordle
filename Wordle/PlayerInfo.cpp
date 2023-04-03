@@ -237,29 +237,3 @@ void showLeaderboard()
 		}
 	}
 }
-
-// de tam ben day
-
-void Background1()
-{
-	string s;
-	ifstream ifs;
-	ifs.open("bulbasaur.txt");
-	while (!ifs.eof())
-	{
-		getline(ifs, s);
-	}
-	cout << s;
-}
-
-void Background2()
-{
-	string s;
-	ifstream ifs;
-	ifs.open("squirle.txt");
-	while (!ifs.eof())
-	{
-		getline(ifs, s);
-	}
-	cout << s;
-}

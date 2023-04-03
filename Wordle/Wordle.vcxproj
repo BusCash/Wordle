@@ -133,14 +133,16 @@
     <ClCompile Include="EasyMode.cpp" />
     <ClCompile Include="ConsoleAndUtility.cpp" />
     <ClCompile Include="PlayerInfo.cpp" />
-    <ClCompile Include="hardMode.cpp" />
+    <ClCompile Include="HardMode.cpp" />
+    <ClCompile Include="Hack.cpp" />
     <ClCompile Include="Wordle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cell.h" />
     <ClInclude Include="EasyMode.h" />
     <ClInclude Include="ConsoleAndUtility.h" />
-    <ClInclude Include="hardMode.h" />
+    <ClInclude Include="HardMode.h" />
+    <ClInclude Include="Hack.h" />
     <ClInclude Include="PlayerInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,4 +1,4 @@
-#include "hardMode.h"
+#include "HardMode.h"
 
 void addTail(Board_2*& head, Board_2* newnode)
 {
