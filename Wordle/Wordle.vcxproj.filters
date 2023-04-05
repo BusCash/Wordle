@@ -18,7 +18,7 @@
     <ClCompile Include="Wordle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cell.cpp">
+    <ClCompile Include="Struct.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EasyMode.cpp">
@@ -38,7 +38,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Cell.h">
+    <ClInclude Include="Struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="EasyMode.h">

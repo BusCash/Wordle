@@ -54,10 +54,13 @@ void generateBoard(Board_1** board)
 
 void deleteBoard(Board_1** board)
 {
-	for (int i = 0; i < boardEasyHeight; i++)
-		delete[] board[i];
+	if (board != NULL)
+	{
+		for (int i = 0; i < boardEasyHeight; i++)
+			delete[] board[i];
 
-	delete[] board;
+		delete[] board;
+	}
 }
 
 void displayBoard(Board_1** board, int delaytime)
@@ -555,44 +558,44 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 	}
 }
 
-bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount)
+bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount)
 {
-	p.eboard[i][j].drawCell(); // Set the selected cell;
+	p->eboard[i][j].drawCell(); // Set the selected cell;
 	Sleep(200);
 
-	p.eboard[iselected][jselected].isSelected = false;
-	p.eboard[i][j].isSelected = false;
+	p->eboard[iselected][jselected].isSelected = false;
+	p->eboard[i][j].isSelected = false;
 
 	bool check = false;
 
-	if (checkMatch(p.eboard, iselected, jselected, i, j, 0)) // If match -> delete cell
+	if (checkMatch(p->eboard, iselected, jselected, i, j, 0)) // If match -> delete cell
 	{
-		if (p.easy.streak < 5)
+		if (p->easy.streak < 5)
 			playSound(5);
-		else if (p.easy.streak < 8)
+		else if (p->easy.streak < 8)
 			playSound(6);
-		else if (p.easy.streak < 10)
+		else if (p->easy.streak < 10)
 			playSound(7);
-		else if (p.easy.streak < 13)
+		else if (p->easy.streak < 13)
 			playSound(8);
 		else
 			playSound(9);
 
-		p.eboard[iselected][jselected].deleteCell(7);
-		p.eboard[i][j].deleteCell(7);
+		p->eboard[iselected][jselected].deleteCell(7);
+		p->eboard[i][j].deleteCell(7);
 
-		p.eboard[iselected][jselected].c = ' ';
-		p.eboard[i][j].c = ' ';
+		p->eboard[iselected][jselected].c = ' ';
+		p->eboard[i][j].c = ' ';
 
 		deletedCount += 2;
 
-		if (!checkValidBoard(p.eboard) && deletedCount != easyHeight * easyWidth)
+		if (!checkValidBoard(p->eboard) && deletedCount != easyHeight * easyWidth)
 		{
 			do
 			{
-				resetPlayingBoard(p.eboard, deletedCount);
-			} while (!checkValidBoard(p.eboard));
-			displayBoard(p.eboard, 5);
+				resetPlayingBoard(p->eboard, deletedCount);
+			} while (!checkValidBoard(p->eboard));
+			displayBoard(p->eboard, 5);
 		}
 
 		check = true;
@@ -600,40 +603,40 @@ bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, i
 	else
 	{
 		playSound(4);
-		p.eboard[iselected][jselected].isValid = true;
-		p.eboard[i][j].isValid = true;
+		p->eboard[iselected][jselected].isValid = true;
+		p->eboard[i][j].isValid = true;
 
 		// Set the old selected cell back to default
-		p.eboard[iselected][jselected].drawCell();
+		p->eboard[iselected][jselected].drawCell();
 	}
 
 	// When done process -> set the current standing cell
-	p.eboard[i][j].isStopped = true;
-	p.eboard[i][j].drawCell();
-	p.eboard[i][j].isStopped = false;
+	p->eboard[i][j].isStopped = true;
+	p->eboard[i][j].drawCell();
+	p->eboard[i][j].isStopped = false;
 
 	return check;
 }
 
-void processPoint(Player& p)
+void processPoint(Player* p)
 {
-	if (p.easy.streak == 0)
+	if (p->easy.streak == 0)
 		return;
-	if (p.easy.streak < 5)
-		p.easy.point += 5;
-	else if (p.easy.streak < 8)
-		p.easy.point += 5 * p.easy.streak;
-	else if (p.easy.streak < 10)
-		p.easy.point += 15 * p.easy.streak;
-	else if (p.easy.streak == 10)
-		p.easy.point += 15 * p.easy.streak + 500;
-	else if (p.easy.streak < 14)
-		p.easy.point += (5 + p.easy.streak) * p.easy.streak + (p.easy.streak - 5) * 100;
+	if (p->easy.streak < 5)
+		p->easy.point += 5;
+	else if (p->easy.streak < 8)
+		p->easy.point += 5 * p->easy.streak;
+	else if (p->easy.streak < 10)
+		p->easy.point += 15 * p->easy.streak;
+	else if (p->easy.streak == 10)
+		p->easy.point += 15 * p->easy.streak + 500;
+	else if (p->easy.streak < 14)
+		p->easy.point += (5 + p->easy.streak) * p->easy.streak + (p->easy.streak - 5) * 100;
 	else
-		p.easy.point += (5 + p.easy.streak) * p.easy.streak + 1005;
+		p->easy.point += (5 + p->easy.streak) * p->easy.streak + 1005;
 }
 
-bool processAction(Board_1** cell, Player& p)
+bool processAction(Board_1** cell, Player* p)
 {
 	int i = 1, j = 1;
 	int oldi = i, oldj = j;
@@ -659,24 +662,26 @@ bool processAction(Board_1** cell, Player& p)
 		// If the game is completed
 		if (deletedCount == easyHeight * easyWidth)
 		{
+			cell[i][j].drawCell();
+			Sleep(1500);
 			clearConsole();
-			p.easy.isFinised = true;
+			p->easy.isFinised = true;
 			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,BACK TO MAIN MENU,JUST QUIT", 4))
 			{
 			case 0: // If quit and don't save
-				p.easy.isPlaying = false;
-				deleteBoard(p.eboard);
+				p->easy.isPlaying = false;
+				deleteBoard(p->eboard);
 				clearConsole();
 				return false;
 			case 1: // If continue playing with the current parameter
-				p.easy.isPlaying = true;
+				p->easy.isPlaying = true;
 				return true;
 			case 2: // If continue playing with new parameter
-				p.easy.isPlaying = false;
-				deleteBoard(p.eboard);
+				p->easy.isPlaying = false;
+				deleteBoard(p->eboard);
 				return true;
 			case 3: // If quit and save parameter
-				p.easy.isPlaying = true;
+				p->easy.isPlaying = true;
 				clearConsole();
 				return false;
 			}
@@ -739,10 +744,12 @@ bool processAction(Board_1** cell, Player& p)
 				{
 					selectedCount = 2;
 					if (processSelectedCell(p, i, j, iselected, jselected, deletedCount))
-						p.easy.streak++;
+						p->easy.streak++;
 					else
-						p.easy.streak = 0;
+						p->easy.streak = 0;
 					processPoint(p);
+					if (p->easy.point > p->easy.maxpoint)
+						p->easy.maxpoint = p->easy.point;
 				}
 			}
 			else if (cell[i][j].isSelected && !cell[i][j].isValid) // If a selected cell is selected again -> unselected
@@ -761,10 +768,10 @@ bool processAction(Board_1** cell, Player& p)
 		}
 		case 6:
 		{
-			if (p.easy.hint)
+			if (p->easy.hint)
 			{
 				showMoveSuggestion(cell, i, j);
-				p.easy.hint--;
+				p->easy.hint--;
 			}
 			break;
 		}
@@ -782,23 +789,23 @@ bool processAction(Board_1** cell, Player& p)
 					case 0: // BACK
 						break;
 					case 1: // SAVE
-						p.easy.isPlaying = true;
+						p->easy.isPlaying = true;
 						return false;
 					case 3: // DON'T SAVE
-						p.easy.isPlaying = false;
-						deleteBoard(p.eboard);
+						p->easy.isPlaying = false;
+						deleteBoard(p->eboard);
 						return false;
 					}
 					break;
 				case 1: // If RESUME -> go back
 					pause = false;
 					cell[i][j].isStopped = true;
-					displayBoard(p.eboard, 0);
+					displayBoard(p->eboard, 0);
 					showParameter(p, "easy");
 					break;
 				case 3: // If RESTART -> delete
-					p.easy.isPlaying = false;
-					deleteBoard(p.eboard);
+					p->easy.isPlaying = false;
+					deleteBoard(p->eboard);
 					return true;
 				}
 			}
@@ -811,40 +818,40 @@ bool processAction(Board_1** cell, Player& p)
 	}
 }
 
-void easyMode(Player& p)
+void easyMode(Player* p)
 {
-	srand(time(0));
+	srand(time(NULL));
 	// If player want to continue playing
 	do
 	{
 		// Check if the board is being played or not
-		if (!p.easy.isPlaying) // If no -> reset new board
+		if (!p->easy.isPlaying) // If no -> reset new board
 		{
 			clearConsole();
-			p.easy.streak = 0;
-			p.easy.point = 0;
-			p.easy.hint = 3;
+			p->easy.streak = 0;
+			p->easy.point = 0;
+			p->easy.hint = 3;
 			do
 			{
-				p.eboard = new Board_1 * [boardEasyHeight];
-				generateBoard(p.eboard);
-				if (!checkValidBoard(p.eboard))
-					deleteBoard(p.eboard);
-			} while (!checkValidBoard(p.eboard));
+				p->eboard = new Board_1 * [boardEasyHeight];
+				generateBoard(p->eboard);
+				if (!checkValidBoard(p->eboard))
+					deleteBoard(p->eboard);
+			} while (!checkValidBoard(p->eboard));
 		}
 		else // If yes -> check if the board is finished
 		{
-			if (p.easy.isFinised) // If yes -> reset new board
+			if (p->easy.isFinised) // If yes -> reset new board
 			{
 				clearConsole();
 				do
 				{
-					resetPlayingBoard(p.eboard, 0);
-				} while (!checkValidBoard(p.eboard));
-				p.easy.isFinised = false;
+					resetPlayingBoard(p->eboard, 0);
+				} while (!checkValidBoard(p->eboard));
+				p->easy.isFinised = false;
 			}
 		}
-		displayBoard(p.eboard, 5);
+		displayBoard(p->eboard, 5);
 		showParameter(p, "easy");
-	} while (processAction(p.eboard, p));
+	} while (processAction(p->eboard, p));
 }

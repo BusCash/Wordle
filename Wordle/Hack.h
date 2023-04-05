@@ -1,12 +1,5 @@
 #pragma once
-#include "Cell.h"
 #include "PlayerInfo.h"
-
-#define PADDING 500
-#define NAMESIZE 50
-#define PASSSIZE 50
-#define BOARDSIZE 999
-#define URLSIZE 100
 
 struct State
 {

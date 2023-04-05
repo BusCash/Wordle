@@ -8,35 +8,51 @@ int main()
 {
 	generateWindow();
 	drawGraph(5);
-	Player p = signIn();
+
+	Player* list = NULL;
+	readPlayerFile(list);
+	Player* p = signIn(list);
+
 	bool quit = false;
 	while (!quit)
 	{
 		drawTitle();
 		switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "PLAY,LEADERBOARD,CREDITS,QUIT", 4))
 		{
-		case 0:
-			if (p.easy.isPlaying || p.hard.isPlaying)
+		case 0: // QUIT
+		{
+			if (p->easy.isPlaying || p->hard.isPlaying)
 			{
 				setColor(12);
 				gotoxy(midWidth - 25, midHeight + 2);
 				cout << "YOU STILL HAVE NOT COMPLETED THE CURRENT STAGE GAME";
 				gotoxy(midWidth - 17, midHeight + 3);
 				cout << "QUIT GAME WILL NOT SAVE YOUR STAGE";
-				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "QUIT,BACK", 2))
+				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "BACK,QUIT", 2))
 				{
 				case 0:
 					quit = true;
-					deleteBoard(p.eboard);
+					if (p->easy.isPlaying)
+					{
+						p->easy.isPlaying = false;
+						deleteBoard(p->eboard);
+					}
+					if (p->hard.isPlaying)
+					{
+						p->hard.isPlaying = false;
+						deleteBoard(p->hboard);
+					}
 					break;
 				case 1:
+					clearConsole();
 					break;
 				}
 			}
 			else
 				quit = true;
 			break;
-		case 1:
+		}
+		case 1: // PLAY
 		{
 			switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "EASY,HARDCORE,BACK", 3))
 			{
@@ -53,11 +69,32 @@ int main()
 			}
 			break;
 		}
-		case 2:
-			break;
-		case 3:
-			bool credits = true;
+		case 2: // LEADERBOARD
+		{
+			Player* easy = sortRank(list, "easy");
+			Player* hard = sortRank(list, "hard");
 			clearConsole();
+			bool ldboard = true;
+
+			while (ldboard)
+			{
+				showLeaderboard(easy, hard);
+				switch (getConsoleInput())
+				{
+				case 5:
+					ldboard = false;
+					clearConsole();
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		}
+		case 3: // CREDITS
+		{
+			clearConsole();
+			bool credits = true;
 			while (credits)
 			{
 				showCredits();
@@ -71,7 +108,10 @@ int main()
 					break;
 				}
 			}
+			break;
+		}
 		}
 	}
+	updatePlayerFile(list);
 	return 0;
 }

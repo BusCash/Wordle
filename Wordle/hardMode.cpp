@@ -89,17 +89,20 @@ void generateBoard(Board_2** board)
 
 void deleteBoard(Board_2** board)
 {
-	for (int i = 0; i < boardHardHeight; i++)
+	if (board != NULL)
 	{
-		Board_2* delnode;
-		while (board[i] != NULL)
+		for (int i = 0; i < boardHardHeight; i++)
 		{
-			delnode = board[i];
-			board[i] = board[i]->next;
-			delete delnode;
+			Board_2* nextnode = board[i];
+			while (board[i] != NULL)
+			{
+				nextnode = board[i]->next;
+				delete board[i];
+				board[i] = nextnode;
+			}
 		}
+		delete[] board;
 	}
-	delete[] board;
 }
 
 void displayBoard(Board_2** board, int delaytime)
@@ -630,43 +633,43 @@ void showMoveSuggestion(Board_2** cell, int inow, int jnow)
 	}
 }
 
-int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount)
+int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount)
 {
-	findNode(p.hboard, i, j)->drawCell(); // Set the selected cell;
+	findNode(p->hboard, i, j)->drawCell(); // Set the selected cell;
 	Sleep(200);
 
-	findNode(p.hboard, iselected, jselected)->isSelected = false;
-	findNode(p.hboard, i, j)->isSelected = false;
+	findNode(p->hboard, iselected, jselected)->isSelected = false;
+	findNode(p->hboard, i, j)->isSelected = false;
 
 	int check = 0;
 
-	if (checkMatch(p.hboard, iselected, jselected, i, j, 0)) // If match -> delete cell
+	if (checkMatch(p->hboard, iselected, jselected, i, j, 0)) // If match -> delete cell
 	{
-		if (p.hard.streak < 5)
+		if (p->hard.streak < 5)
 			playSound(5);
-		else if (p.hard.streak < 8)
+		else if (p->hard.streak < 8)
 			playSound(6);
-		else if (p.hard.streak < 10)
+		else if (p->hard.streak < 10)
 			playSound(7);
-		else if (p.hard.streak < 13)
+		else if (p->hard.streak < 13)
 			playSound(8);
 		else
 			playSound(9);
 
-		findNode(p.hboard, iselected, jselected)->c = ' ';
-		findNode(p.hboard, i, j)->c = ' ';
+		findNode(p->hboard, iselected, jselected)->c = ' ';
+		findNode(p->hboard, i, j)->c = ' ';
 
-		findNode(p.hboard, iselected, jselected)->deleteCell(7);
-		findNode(p.hboard, i, j)->deleteCell(7);
+		findNode(p->hboard, iselected, jselected)->deleteCell(7);
+		findNode(p->hboard, i, j)->deleteCell(7);
 
-		moveCell(p.hboard, iselected, jselected);
-		moveCell(p.hboard, i, j);
+		moveCell(p->hboard, iselected, jselected);
+		moveCell(p->hboard, i, j);
 
-		displayBoard(p.hboard, 0);
+		displayBoard(p->hboard, 0);
 
 		deletedCount += 2;
 
-		if (!checkValidBoard(p.hboard) && deletedCount != hardHeight * hardWidth)
+		if (!checkValidBoard(p->hboard) && deletedCount != hardHeight * hardWidth)
 			return -1;
 
 		check = 1;
@@ -674,40 +677,40 @@ int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected
 	else
 	{
 		playSound(4);
-		findNode(p.hboard, iselected, jselected)->isValid = true;
-		findNode(p.hboard, i, j)->isValid = true;
+		findNode(p->hboard, iselected, jselected)->isValid = true;
+		findNode(p->hboard, i, j)->isValid = true;
 
 		// Set the old selected cell back to default
-		findNode(p.hboard, iselected, jselected)->drawCell();
+		findNode(p->hboard, iselected, jselected)->drawCell();
 	}
 
 	// When done process -> set the current standing cell
-	findNode(p.hboard, i, j)->isStopped = true;
-	findNode(p.hboard, i, j)->drawCell();
-	findNode(p.hboard, i, j)->isStopped = false;
+	findNode(p->hboard, i, j)->isStopped = true;
+	findNode(p->hboard, i, j)->drawCell();
+	findNode(p->hboard, i, j)->isStopped = false;
 
 	return check;
 }
 
-void processHardPoint(Player& p)
+void processHardPoint(Player* p)
 {
-	if (p.hard.streak == 0)
+	if (p->hard.streak == 0)
 		return;
-	if (p.hard.streak < 5)
-		p.hard.point += 5;
-	else if (p.hard.streak < 8)
-		p.hard.point += 5 * p.hard.streak;
-	else if (p.hard.streak < 10)
-		p.hard.point += 15 * p.hard.streak;
-	else if (p.hard.streak == 10)
-		p.hard.point += 15 * p.hard.streak + 500;
-	else if (p.hard.streak < 14)
-		p.hard.point += (5 + p.hard.streak) * p.hard.streak + (p.hard.streak - 5) * 100;
+	if (p->hard.streak < 5)
+		p->hard.point += 5;
+	else if (p->hard.streak < 8)
+		p->hard.point += 5 * p->hard.streak;
+	else if (p->hard.streak < 10)
+		p->hard.point += 15 * p->hard.streak;
+	else if (p->hard.streak == 10)
+		p->hard.point += 15 * p->hard.streak + 500;
+	else if (p->hard.streak < 14)
+		p->hard.point += (5 + p->hard.streak) * p->hard.streak + (p->hard.streak - 5) * 100;
 	else
-		p.hard.point += (5 + p.hard.streak) * p.hard.streak + 1005;
+		p->hard.point += (5 + p->hard.streak) * p->hard.streak + 1005;
 }
 
-bool processAction(Board_2** cell, Player& p)
+bool processAction(Board_2** cell, Player* p)
 {
 	int i = 1, j = 1;
 	int oldi = i, oldj = j;
@@ -734,6 +737,8 @@ bool processAction(Board_2** cell, Player& p)
 		// If the game is completed
 		if (deletedCount == hardHeight * hardWidth)
 		{
+			findNode(cell, i, j)->drawCell();
+			Sleep(1500);
 			clearConsole();
 			if (!win)
 			{
@@ -744,34 +749,35 @@ bool processAction(Board_2** cell, Player& p)
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "RESTART,BACK TO MAIN MENU", 2))
 				{
 				case 0:
-					p.hard.isPlaying = false;
-					deleteBoard(p.hboard);
+					p->hard.isPlaying = false;
+					deleteBoard(p->hboard);
+					clearConsole();
 					return false;
 				case 1:
-					p.hard.isPlaying = false;
-					deleteBoard(p.hboard);
+					p->hard.isPlaying = false;
+					deleteBoard(p->hboard);
 					return true;
 				}
 			}
 			else
 			{
-				p.hard.isFinised = true;
+				p->hard.isFinised = true;
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,SAVE AND MAIN MENU,JUST QUIT", 4))
 				{
 				case 0: // If quit and don't save
-					p.hard.isPlaying = false;
-					deleteBoard(p.hboard);
+					p->hard.isPlaying = false;
+					deleteBoard(p->hboard);
 					clearConsole();
 					return false;
 				case 1: // If continue playing with the current parameter
-					p.hard.isPlaying = true;
+					p->hard.isPlaying = true;
 					return true;
 				case 2: // If continue playing with new parameter
-					p.hard.isPlaying = false;
-					deleteBoard(p.hboard);
+					p->hard.isPlaying = false;
+					deleteBoard(p->hboard);
 					return true;
 				case 3: // If quit and save parameter
-					p.hard.isPlaying = true;
+					p->hard.isPlaying = true;
 					clearConsole();
 					return false;
 				}
@@ -838,15 +844,17 @@ bool processAction(Board_2** cell, Player& p)
 					selectedCount = 2;
 					int checkselectecd = processSelectedHardCell(p, i, j, iselected, jselected, deletedCount);
 					if (checkselectecd == 1)
-						p.hard.streak++;
+						p->hard.streak++;
 					else if (checkselectecd == 0)
-						p.hard.streak = 0;
+						p->hard.streak = 0;
 					else
 					{
 						deletedCount = hardHeight * hardWidth;
 						win = false;
 					}
 					processHardPoint(p);
+					if (p->hard.point > p->hard.maxpoint)
+						p->hard.maxpoint = p->hard.point;
 				}
 			}
 			else if (findNode(cell, i, j)->isSelected && !findNode(cell, i, j)->isValid) // If a selected cell is selected again -> unselected
@@ -865,10 +873,10 @@ bool processAction(Board_2** cell, Player& p)
 		}
 		case 6:
 		{
-			if (p.hard.hint)
+			if (p->hard.hint)
 			{
 				showMoveSuggestion(cell, i, j);
-				p.hard.hint--;
+				p->hard.hint--;
 			}
 			break;
 		}
@@ -886,26 +894,27 @@ bool processAction(Board_2** cell, Player& p)
 					case 0: // BACK
 						break;
 					case 1: // SAVE
-						p.hard.isPlaying = true;
+						p->hard.isPlaying = true;
 						return false;
 					case 3: // DON'T SAVE
-						p.hard.isPlaying = false;
-						deleteBoard(p.hboard);
+						p->hard.isPlaying = false;
+						deleteBoard(p->hboard);
 						return false;
 					}
 					break;
 				case 1: // If RESUME -> go back
 					pause = false;
 					findNode(cell, i, j)->isStopped = true;
-					displayBoard(p.hboard, 0);
+					displayBoard(p->hboard, 0);
 					showParameter(p, "hard");
 					break;
 				case 3: // If RESTART -> delete
-					p.hard.isPlaying = false;
-					deleteBoard(p.hboard);
+					p->hard.isPlaying = false;
+					deleteBoard(p->hboard);
 					return true;
 				}
 			}
+			break;
 		}
 		default:
 			break;
@@ -915,40 +924,40 @@ bool processAction(Board_2** cell, Player& p)
 	}
 }
 
-void hardMode(Player& p)
+void hardMode(Player* p)
 {
-	srand(time(0));
+	srand(time(NULL));
 	// If player want to continue playing
 	do
 	{
 		// Check if the board is being played or not
-		if (!p.hard.isPlaying) // If no -> reset new board
+		if (!p->hard.isPlaying) // If no -> reset new board
 		{
 			clearConsole();
-			p.hard.streak = 0;
-			p.hard.point = 0;
-			p.hard.hint = 2;
+			p->hard.streak = 0;
+			p->hard.point = 0;
+			p->hard.hint = 2;
 			do
 			{
-				p.hboard = new Board_2 * [boardHardHeight];
-				generateBoard(p.hboard);
-				if (!checkValidBoard(p.hboard))
-					deleteBoard(p.hboard);
-			} while (!checkValidBoard(p.hboard));
+				p->hboard = new Board_2 * [boardHardHeight];
+				generateBoard(p->hboard);
+				if (!checkValidBoard(p->hboard))
+					deleteBoard(p->hboard);
+			} while (!checkValidBoard(p->hboard));
 		}
 		else // If yes -> check if the board is finished
 		{
-			if (p.hard.isFinised) // If yes -> reset new board
+			if (p->hard.isFinised) // If yes -> reset new board
 			{
 				clearConsole();
 				do
 				{
-					resetPlayingBoard(p.hboard);
-				} while (!checkValidBoard(p.hboard));
-				p.hard.isFinised = false;
+					resetPlayingBoard(p->hboard);
+				} while (!checkValidBoard(p->hboard));
+				p->hard.isFinised = false;
 			}
 		}
-		displayBoard(p.hboard, 5);
+		displayBoard(p->hboard, 5);
 		showParameter(p, "hard");
-	} while (processAction(p.hboard, p));
+	} while (processAction(p->hboard, p));
 }

@@ -1,14 +1,13 @@
 #pragma once
-#include "Cell.h"
+#include "Struct.h"
 #include "ConsoleAndUtility.h"
 
+void addPlayer(Player*& list, Player* p);
+void readPlayerFile(Player*& list);
+void updatePlayerFile(Player*& list);
+void deleteList(Player*& list);
 bool checkNewPlayer();
+Player* signIn(Player*& list);
 void showWordDisplayEffect(string s);
-void readPlayerInfo(Player player[], int& n);
-Player getPlayerInfo(bool newbie);
-void processPlayerInfo(Player& p, Player player[], int n);
-Player signIn();
-bool compareScore(Player a, Player b, string mode);
-void saveRecord(Player player[], int n);
-void showLeaderboard();
-void printLeaderboard();
+Player* sortRank(Player*& list, string mode);
+void showLeaderboard(Player* easy, Player* hard);

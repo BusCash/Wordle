@@ -28,13 +28,13 @@ void showMoveSuggestion(Board_1** cell, int i, int j);
 void resetPlayingBoard(Board_1** board, int deletedCount);
 
 // Handle the 2 selected cells
-bool processSelectedCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount);
+bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount);
 
 // Calculate point and streak
-void processPoint(Player& p);
+void processPoint(Player* p);
 
 // Handle the action of player
-bool processAction(Board_1** cell, Player& p);
+bool processAction(Board_1** cell, Player* p);
 
 // Generate all functions in easymode
-void easyMode(Player& p);
+void easyMode(Player* p);

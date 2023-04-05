@@ -37,13 +37,13 @@ void showMoveSuggestion(Board_2** cell, int i, int j);
 void resetPlayingBoard(Board_2** board);
 
 // Handle the 2 selected cells
-int processSelectedHardCell(Player p, int i, int j, int iselected, int jselected, int& deletedCount);
+int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount);
 
 // Calculate point and streak
-void processHardPoint(Player& p);
+void processHardPoint(Player* p);
 
 // Handle the action of player
-bool processAction(Board_2** cell, Player& p);
+bool processAction(Board_2** cell, Player* p);
 
 // Generate all functions in hardmode
-void hardMode(Player& p);
+void hardMode(Player* p);

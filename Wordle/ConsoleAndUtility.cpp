@@ -240,15 +240,14 @@ void clearConsole()
 
 void showCredits()
 {
-	gotoxy(midWidth - 9, midHeight + 6);
+	gotoxy(midWidth - 13, midHeight + 6);
 	cout << "22127126 - Nguyen Duy Hoang";
-	gotoxy(midWidth - 9, midHeight + 7);
-	cout << " 22127405 - Tran Minh Thu";
-	gotoxy(midWidth - 2, midHeight + 8);
+	gotoxy(midWidth - 12, midHeight + 7);
+	cout << "22127405 - Tran Minh Thu";
+	gotoxy(midWidth - 7, midHeight + 8);
 	cout << "Class: 22CLC08";
-	gotoxy(midWidth - 18, midHeight + 9);
+	gotoxy(midWidth - 23, midHeight + 9);
 	cout << "Instructors: Bui Huy Thong - Tran Thi Thao Nhi";
-	gotoxy(midWidth - 9, midHeight + 10);
 	setColor(109);
 	int barX = midWidth - 9, barY = midHeight + 11;
 	gotoxy(barX, barY);
@@ -269,20 +268,20 @@ void getBackground(char bg[][65], int m, int n, string filein)
 	file.close();
 }
 
-void showParameter(Player p, string mode)
+void showParameter(Player* p, string mode)
 {
 	int point, streak, hint;
 	if (mode == "easy")
 	{
-		point = p.easy.point;
-		streak = p.easy.streak;
-		hint = p.easy.hint;
+		point = p->easy.point;
+		streak = p->easy.streak;
+		hint = p->easy.hint;
 	}
 	else
 	{
-		point = p.hard.point;
-		streak = p.hard.streak;
-		hint = p.hard.hint;
+		point = p->hard.point;
+		streak = p->hard.streak;
+		hint = p->hard.hint;
 	}
 
 	setColor(10);
@@ -321,5 +320,5 @@ void showParameter(Player p, string mode)
 void playSound(int i)
 {
 	const wchar_t* soundfile[10] = { L"sound\\move.wav", L"sound\\enter.wav", L"sound\\hint.wav", L"sound\\error.wav", L"sound\\wrong.wav", L"sound\\streak1.wav", L"sound\\streak2.wav", L"sound\\streak3.wav", L"sound\\streak4.wav", L"sound\\streak5.wav" };
-	PlaySound(soundfile[i], NULL, SND_FILENAME | SND_ASYNC);
+	PlaySoundW(soundfile[i], NULL, SND_FILENAME | SND_ASYNC);
 }

@@ -19,6 +19,12 @@
 #define cellHeight 3
 #define cellWidth 6
 
+#define PADDING 500
+#define NAMESIZE 50
+#define PASSSIZE 50
+#define BOARDSIZE 999
+#define URLSIZE 100
+
 using namespace std;
 
 struct Time
@@ -29,9 +35,9 @@ struct Time
 
 struct Board_1
 {
-	int x, y;   // Coord of the topleft corner of the cell
-	int ci, cj; // Order of the cell
-	int cx, cy; // Coord of the char
+	int x = 0, y = 0;   // Coord of the topleft corner of the cell
+	int ci = 0, cj = 0; // Order of the cell
+	int cx = 0, cy = 0; // Coord of the char
 	char c = ' ';
 
 	bool isStopped = false;
@@ -54,9 +60,9 @@ struct Board_1
 
 struct Board_2
 {
-	int x, y;   // Coord of the topleft corner of the cell
-	int ci, cj; // Order of the cell
-	int cx, cy; // Coord of the char
+	int x = 0, y = 0;   // Coord of the topleft corner of the cell
+	int ci = 0, cj = 0; // Order of the cell
+	int cx = 0, cy = 0; // Coord of the char
 	char c = ' ';
 
 	bool isStopped = false;
@@ -77,24 +83,26 @@ struct Board_2
 struct Parameter
 {
 	int point = 0;
+	int maxpoint = 0;
 	int hint = 0;
 	int streak = 0;
 
-	bool isNew = true;
 	bool isPlaying = false;
 	bool isFinised = false;
 };
 
 struct Player
 {
-	string name;
-	string id;
+	char name[NAMESIZE] = "";
+	char id[PASSSIZE] = "";
 
 	Parameter easy;
 	Parameter hard;
 
-	Board_1** eboard;
-	Board_2** hboard;
+	Board_1** eboard = NULL;
+	Board_2** hboard = NULL;
+
+	Player* next = NULL;
 };
 
 struct Position
