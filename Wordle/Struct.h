@@ -8,14 +8,6 @@
 #include <mmsystem.h>
 #include <fstream>
 
-#define boardEasyHeight 6
-#define boardEasyWidth 9
-#define easyHeight 4
-#define easyWidth 7
-#define boardHardHeight 8
-#define boardHardWidth 13
-#define hardHeight 6
-#define hardWidth 11
 #define cellHeight 3
 #define cellWidth 6
 
@@ -46,16 +38,16 @@ struct Board_1
 	bool isHint = false;
 
 	// Draw background when a cell is deleted
-	void drawBackgroundCell(char bg[][65]);
+	void drawBackgroundCell(char bg[][65], int easyHeight, int easyWidth);
 
 	// Adjust a cell status
-	void drawCell();
+	void drawCell(int easyHeight, int easyWidth);
 
 	// Delete cell and arrow
-	void deleteCell(int color);
+	void deleteCell(int color, int easyHeight, int easyWidth);
 
 	// Draw arrow when match
-	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
+	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardEasyHeight, int boardEasyWidth);
 };
 
 struct Board_2
@@ -70,12 +62,12 @@ struct Board_2
 	bool isValid = true;
 	bool isHint = false;
 
-	void drawBackgroundCell(char bg[][65]);
+	void drawBackgroundCell(char bg[][65], int hardHeight, int hardWidth);
 
-	void drawCell();
-	void deleteCell(int color);
+	void drawCell(int hardHeight, int hardWidth);
+	void deleteCell(int color, int hardHeight, int hardWidth);
 
-	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
+	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardHardHeight, int boardHardWidth);
 
 	Board_2* next;
 };

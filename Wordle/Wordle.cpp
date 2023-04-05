@@ -12,6 +12,10 @@ int main()
 	Player* list = NULL;
 	readPlayerFile(list);
 	Player* p = signIn(list);
+	int easyHeight = 0,
+		easyWidth = 0;
+	int hardHeight = 0,
+		hardWidth = 0;
 
 	bool quit = false;
 	while (!quit)
@@ -35,12 +39,12 @@ int main()
 					if (p->easy.isPlaying)
 					{
 						p->easy.isPlaying = false;
-						deleteBoard(p->eboard);
+						deleteBoard(p->eboard, easyHeight);
 					}
 					if (p->hard.isPlaying)
 					{
 						p->hard.isPlaying = false;
-						deleteBoard(p->hboard);
+						deleteBoard(p->hboard, hardHeight);
 					}
 					break;
 				case 1:
@@ -60,11 +64,11 @@ int main()
 				break;
 			case 1:
 				clearConsole();
-				easyMode(p);
+				easyMode(p, easyHeight, easyWidth);
 				break;
 			case 3:
 				clearConsole();
-				hardMode(p);
+				hardMode(p, hardHeight, hardWidth);
 				break;
 			}
 			break;
