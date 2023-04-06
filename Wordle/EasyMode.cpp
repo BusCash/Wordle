@@ -828,7 +828,6 @@ bool processAction(Board_1** cell, Player* p, int easyHeight, int easyWidth)
 		default:
 			break;
 		}
-
 		showParameter(p, "easy");
 	}
 }
@@ -889,6 +888,7 @@ void easyMode(Player* p, int& easyHeight, int& easyWidth)
 				break;
 			case 1:
 				p->easy.isPlaying = false;
+				deleteBoard(p->eboard, easyHeight);
 				check = false;
 				break;
 			}

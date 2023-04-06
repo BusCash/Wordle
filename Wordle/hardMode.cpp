@@ -999,6 +999,7 @@ void hardMode(Player* p, int& hardHeight, int& hardWidth)
 				break;
 			case 1:
 				p->hard.isPlaying = false;
+				deleteBoard(p->hboard, hardHeight);
 				check = false;
 				break;
 			}
