@@ -784,21 +784,29 @@ bool processAction(Board_2** cell, Player* p, int hardHeight, int hardWidth)
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,SAVE AND MAIN MENU,JUST QUIT", 4))
 				{
 				case 0: // If quit and don't save
+				{
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard, hardHeight);
 					clearConsole();
 					return false;
+				}
 				case 1: // If continue playing with the current parameter
+				{
 					p->hard.isPlaying = true;
 					return true;
+				}
 				case 2: // If continue playing with new parameter
+				{
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard, hardHeight);
 					return true;
+				}
 				case 3: // If quit and save parameter
+				{
 					p->hard.isPlaying = true;
 					clearConsole();
 					return false;
+				}
 				}
 
 			}
@@ -908,29 +916,39 @@ bool processAction(Board_2** cell, Player* p, int hardHeight, int hardWidth)
 				switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "RESUME,RESTART,QUIT", 3))
 				{
 				case 0: // If QUIT is selected
+				{
 					switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "SAVE,DON'T SAVE,BACK", 3))
 					{
 					case 0: // BACK
 						break;
 					case 1: // SAVE
+					{
 						p->hard.isPlaying = true;
 						return false;
+					}
 					case 3: // DON'T SAVE
+					{
 						p->hard.isPlaying = false;
 						deleteBoard(p->hboard, hardHeight);
 						return false;
 					}
+					}
 					break;
+				}
 				case 1: // If RESUME -> go back
+				{
 					pause = false;
 					findNode(cell, i, j, hardHeight, hardWidth)->isStopped = true;
 					displayBoard(p->hboard, 0, hardHeight, hardWidth);
 					showParameter(p, "hard");
 					break;
+				}
 				case 3: // If RESTART -> delete
+				{
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard, hardHeight);
 					return true;
+				}
 				}
 			}
 			break;
@@ -972,7 +990,7 @@ void hardMode(Player* p, int& hardHeight, int& hardWidth)
 			cin >> hardWidth;
 			if (hardHeight * hardWidth % 2 == 0)
 			{
-				if (hardHeight < 7 && hardHeight >0 && hardWidth < 12 && hardWidth >0)
+				if (hardHeight < 7 && hardHeight > 0 && hardWidth < 12 && hardWidth > 0)
 					break;
 				else
 				{
@@ -998,10 +1016,12 @@ void hardMode(Player* p, int& hardHeight, int& hardWidth)
 			case 0:
 				break;
 			case 1:
+			{
 				p->hard.isPlaying = false;
 				deleteBoard(p->hboard, hardHeight);
 				check = false;
 				break;
+			}
 			}
 			clearConsole();
 			if (check)

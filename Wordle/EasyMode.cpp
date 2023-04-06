@@ -684,21 +684,29 @@ bool processAction(Board_1** cell, Player* p, int easyHeight, int easyWidth)
 			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,SAVE AND MAIN MENU,JUST QUIT", 4))
 			{
 			case 0: // If quit and don't save
+			{
 				p->easy.isPlaying = false;
 				deleteBoard(p->eboard, easyHeight);
 				clearConsole();
 				return false;
+			}
 			case 1: // If continue playing with the current parameter
+			{
 				p->easy.isPlaying = true;
 				return true;
+			}
 			case 2: // If continue playing with new parameter
+			{
 				p->easy.isPlaying = false;
 				deleteBoard(p->eboard, easyHeight);
 				return true;
+			}
 			case 3: // If quit and save parameter
+			{
 				p->easy.isPlaying = true;
 				clearConsole();
 				return false;
+			}
 			}
 		}
 
@@ -799,29 +807,39 @@ bool processAction(Board_1** cell, Player* p, int easyHeight, int easyWidth)
 				switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "RESUME,RESTART,QUIT", 3))
 				{
 				case 0: // If QUIT is selected
+				{
 					switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "SAVE,DON'T SAVE,BACK", 3))
 					{
 					case 0: // BACK
 						break;
 					case 1: // SAVE
+					{
 						p->easy.isPlaying = true;
 						return false;
+					}
 					case 3: // DON'T SAVE
+					{
 						p->easy.isPlaying = false;
 						deleteBoard(p->eboard, easyHeight);
 						return false;
 					}
+					}
 					break;
+				}
 				case 1: // If RESUME -> go back
+				{
 					pause = false;
 					cell[i][j].isStopped = true;
 					displayBoard(p->eboard, 0, easyHeight, easyWidth);
 					showParameter(p, "easy");
 					break;
+				}
 				case 3: // If RESTART -> delete
+				{
 					p->easy.isPlaying = false;
 					deleteBoard(p->eboard, easyHeight);
 					return true;
+				}
 				}
 			}
 		}
@@ -861,7 +879,7 @@ void easyMode(Player* p, int& easyHeight, int& easyWidth)
 			setColor(12);
 			if (easyHeight * easyWidth % 2 == 0)
 			{
-				if (easyHeight < 7 && easyHeight >0 && easyWidth < 12 && easyWidth >0)
+				if (easyHeight < 7 && easyHeight > 0 && easyWidth < 12 && easyWidth > 0)
 					break;
 				else
 				{
@@ -887,10 +905,12 @@ void easyMode(Player* p, int& easyHeight, int& easyWidth)
 			case 0:
 				break;
 			case 1:
+			{
 				p->easy.isPlaying = false;
 				deleteBoard(p->eboard, easyHeight);
 				check = false;
 				break;
+			}
 			}
 			clearConsole();
 			if (check)
