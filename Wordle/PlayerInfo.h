@@ -9,5 +9,5 @@ void deleteList(Player*& list);
 bool checkNewPlayer();
 Player* signIn(Player*& list);
 void showWordDisplayEffect(string s);
-Player* sortRank(Player*& list, string mode);
+Player* sortRank(Player* list, string mode);
 void showLeaderboard(Player* easy, Player* hard);

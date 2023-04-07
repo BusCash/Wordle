@@ -13,6 +13,7 @@ int main()
 	Player* p = signIn(list);
 	Player* temp = new Player;
 	bool quit = false;
+
 	while (!quit)
 	{
 		drawTitle();
@@ -167,8 +168,8 @@ int main()
 			Player* easy = sortRank(list, "easy");
 			Player* hard = sortRank(list, "hard");
 			clearConsole();
-			bool ldboard = true;
 
+			bool ldboard = true;
 			while (ldboard)
 			{
 				showLeaderboard(easy, hard);

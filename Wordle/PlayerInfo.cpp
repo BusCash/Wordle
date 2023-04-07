@@ -190,7 +190,7 @@ void showWordDisplayEffect(string s)
 	}
 }
 
-Player* sortRank(Player*& list, string mode)
+Player* sortRank(Player* list, string mode)
 {
 	Player* end, * prevnode, * curnode, * nextnode, * temp;
 	if (mode == "easy")
