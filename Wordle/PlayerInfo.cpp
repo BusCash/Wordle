@@ -15,12 +15,11 @@ void addPlayer(Player*& list, Player* p)
 
 void deleteList(Player*& list)
 {
-	Player* nextnode = list;
-	while (list != NULL)
+	for (Player* curnode = list; list != NULL; curnode = list)
 	{
-		nextnode = list->next;
-		delete list;
-		list = nextnode;
+		list = list->next;
+		delete curnode;
+		curnode = NULL;
 	}
 }
 
@@ -56,7 +55,6 @@ void updatePlayerFile(Player*& list)
 		curnode = curnode->next;
 	}
 	file.close();
-	deleteList(list);
 }
 
 bool checkNewPlayer()

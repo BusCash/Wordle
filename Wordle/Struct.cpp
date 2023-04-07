@@ -7,24 +7,27 @@ char cell[cellHeight][cellWidth] = {
 	{"     "},
 };
 
-void Board_1::drawBackgroundCell(char bg[][65], int easyHeight, int easyWidth)
+void Board_1::drawBackgroundCell(char bg[][65])
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardEasyWidth * cellWidth - 1) / 2)) / (cellWidth);
+
 	setColor(7);
 	for (int h = 0; h < cellHeight + 1; h++)
 	{
-		if (ci == easyHeight && h == cellHeight)
+		if (ci == easyHeight && h == 3)
 			break;
 		gotoxy(x, y + h);
 		for (int k = 0; k < 6; k++)
 		{
-			if (cj == easyWidth && k == cellWidth - 1)
+			if (cj == easyWidth && k == 5)
 				break;
 			cout << bg[(ci - 1) * 4 + h][(cj - 1) * 6 + k];
 		}
 	}
 }
 
-void Board_1::drawCell(int easyHeight, int easyWidth)
+void Board_1::drawCell()
 {
 	if (isHint)
 	{
@@ -118,19 +121,30 @@ void Board_1::drawCell(int easyHeight, int easyWidth)
 		else
 		{
 			if (!isSelected)
-				deleteCell(7, easyHeight, easyWidth);
+				deleteCell(7);
 		}
 	}
 	setColor(7);
 }
 
-void Board_1::deleteCell(int color, int easyHeight, int easyWidth)
+void Board_1::deleteCell(int color)
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardEasyWidth * cellWidth - 1) / 2)) / (cellWidth);
+
 	setColor(color);
 	for (int i = 0; i < cellHeight; i++)
 	{
 		gotoxy(x, y + i);
 		cout << cell[i];
+		gotoxy(cx + 3, cy);
+		cout << " ";
+		gotoxy(cx - 3, cy);
+		cout << " ";
+		gotoxy(cx, cy - 2);
+		cout << " ";
+		gotoxy(cx, cy + 2);
+		cout << " ";
 
 		if (ci == 0)
 		{
@@ -155,13 +169,15 @@ void Board_1::deleteCell(int color, int easyHeight, int easyWidth)
 	}
 
 	char bg[23][65];
-	getBackground(bg, cellHeight * easyHeight + easyHeight - 1, (cellWidth - 1) * easyWidth + easyWidth - 1, "background\\easy.txt");
+	getBackground(bg, 23, 41, "background\\easy.txt");
 	if (ci != 0 && ci != easyHeight + 1 && cj != 0 && cj != easyWidth + 1)
-		drawBackgroundCell(bg, easyHeight, easyWidth);
+		drawBackgroundCell(bg);
 }
 
-void Board_1::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardEasyHeight, int boardEasyWidth)
+void Board_1::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2)
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardEasyWidth * cellWidth - 1) / 2)) / (cellWidth);
 	int ci2 = (cy2 - 1 - (midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
 		cj2 = (cx2 - 2 - (midWidth - (boardEasyWidth * cellWidth - 1) / 2)) / (cellWidth);
 
@@ -311,24 +327,26 @@ void Board_1::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int bo
 	}
 }
 
-void Board_2::drawBackgroundCell(char bg[][65], int hardHeight, int hardWidth)
+void Board_2::drawBackgroundCell(char bg[][65])
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardHardWidth * cellWidth - 1) / 2)) / (cellWidth);
 	setColor(7);
 	for (int h = 0; h < cellHeight + 1; h++)
 	{
-		if (ci == hardHeight && h == cellHeight)
+		if (ci == hardHeight && h == 3)
 			break;
 		gotoxy(x, y + h);
 		for (int k = 0; k < 6; k++)
 		{
-			if (cj == hardWidth && k == cellWidth - 1)
+			if (cj == hardWidth && k == 5)
 				break;
 			cout << bg[(ci - 1) * 4 + h][(cj - 1) * 6 + k];
 		}
 	}
 }
 
-void Board_2::drawCell(int hardHeight, int hardWidth)
+void Board_2::drawCell()
 {
 	if (isHint)
 	{
@@ -422,14 +440,17 @@ void Board_2::drawCell(int hardHeight, int hardWidth)
 		else
 		{
 			if (!isSelected)
-				deleteCell(7, hardHeight, hardWidth);
+				deleteCell(7);
 		}
 	}
 	setColor(7);
 }
 
-void Board_2::deleteCell(int color, int hardHeight, int hardWidth)
+void Board_2::deleteCell(int color)
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardHardWidth * cellWidth - 1) / 2)) / (cellWidth);
+
 	setColor(color);
 	for (int i = 0; i < cellHeight; i++)
 	{
@@ -467,13 +488,15 @@ void Board_2::deleteCell(int color, int hardHeight, int hardWidth)
 	}
 
 	char bg[23][65];
-	getBackground(bg, cellHeight * hardHeight + hardHeight - 1, (cellWidth - 1) * hardWidth + hardWidth - 1, "background\\hard.txt");
+	getBackground(bg, 23, 65, "background\\hard.txt");
 	if (ci != 0 && ci != hardHeight + 1 && cj != 0 && cj != hardWidth + 1)
-		drawBackgroundCell(bg, hardHeight, hardWidth);
+		drawBackgroundCell(bg);
 }
 
-void Board_2::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardHardHeight, int boardHardWidth)
+void Board_2::drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2)
 {
+	int ci = (cy - 1 - (midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
+		cj = (cx - 2 - (midWidth - (boardHardWidth * cellWidth - 1) / 2)) / (cellWidth);
 	int ci2 = (cy2 - 1 - (midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2)) / (cellHeight + 1),
 		cj2 = (cx2 - 2 - (midWidth - (boardHardWidth * cellWidth - 1) / 2)) / (cellWidth);
 

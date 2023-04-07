@@ -8,6 +8,22 @@
 #include <mmsystem.h>
 #include <fstream>
 
+#ifndef STRUCT_H
+#define STRUCT_H
+
+extern int
+easyHeight,
+easyWidth,
+hardHeight,
+hardWidth;
+extern int
+boardEasyHeight,
+boardEasyWidth,
+boardHardHeight,
+boardHardWidth;
+
+#endif // !STRUCT_H
+
 #define cellHeight 3
 #define cellWidth 6
 
@@ -28,7 +44,6 @@ struct Time
 struct Board_1
 {
 	int x = 0, y = 0;   // Coord of the topleft corner of the cell
-	int ci = 0, cj = 0; // Order of the cell
 	int cx = 0, cy = 0; // Coord of the char
 	char c = ' ';
 
@@ -38,22 +53,21 @@ struct Board_1
 	bool isHint = false;
 
 	// Draw background when a cell is deleted
-	void drawBackgroundCell(char bg[][65], int easyHeight, int easyWidth);
+	void drawBackgroundCell(char bg[][65]);
 
 	// Adjust a cell status
-	void drawCell(int easyHeight, int easyWidth);
+	void drawCell();
 
 	// Delete cell and arrow
-	void deleteCell(int color, int easyHeight, int easyWidth);
+	void deleteCell(int color);
 
 	// Draw arrow when match
-	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardEasyHeight, int boardEasyWidth);
+	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 };
 
 struct Board_2
 {
 	int x = 0, y = 0;   // Coord of the topleft corner of the cell
-	int ci = 0, cj = 0; // Order of the cell
 	int cx = 0, cy = 0; // Coord of the char
 	char c = ' ';
 
@@ -62,12 +76,12 @@ struct Board_2
 	bool isValid = true;
 	bool isHint = false;
 
-	void drawBackgroundCell(char bg[][65], int hardHeight, int hardWidth);
+	void drawBackgroundCell(char bg[][65]);
 
-	void drawCell(int hardHeight, int hardWidth);
-	void deleteCell(int color, int hardHeight, int hardWidth);
+	void drawCell();
+	void deleteCell(int color);
 
-	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2, int boardHardHeight, int boardHardWidth);
+	void drawArrow(int cx2, int cy2, int i1, int j1, int i2, int j2);
 
 	Board_2* next;
 };

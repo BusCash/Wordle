@@ -1,6 +1,6 @@
 ﻿#include "EasyMode.h"
 
-void generateBoard(Board_1** board, int easyHeight, int easyWidth)
+void generateBoard(Board_1** board)
 {
 	int boardEasyHeight = easyHeight + 2,
 		boardEasyWidth = easyWidth + 2;
@@ -11,8 +11,8 @@ void generateBoard(Board_1** board, int easyHeight, int easyWidth)
 		for (int j = 0; j < boardEasyWidth; j++)
 		{
 			// Set the position for the cell
-			board[i][j].x = j * cellWidth + midWidth - (boardEasyWidth * cellWidth - 1) / 2;
-			board[i][j].y = i * (cellHeight + 1) + midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2;
+			board[i][j].x = j * cellWidth + 17;
+			board[i][j].y = i * (cellHeight + 1) + 11;
 
 			// Set the order for the cell
 			board[i][j].ci = i;
@@ -850,77 +850,8 @@ bool processAction(Board_1** cell, Player* p, int easyHeight, int easyWidth)
 	}
 }
 
-void easyMode(Player* p, int& easyHeight, int& easyWidth)
+void easyMode(Player* p)
 {
-	while (true)
-	{
-		if (!p->easy.isPlaying)
-		{
-			clearConsole();
-			setColor(12);
-			gotoxy(midWidth - 14, midHeight + 5);
-			cout << "THE TOTAL CELLS MUST BE EVEN";
-			gotoxy(midWidth - 13, midHeight + 6);
-			cout << "ROWS MUST BE SMALLER THAN 7";
-			gotoxy(midWidth - 15, midHeight + 7);
-			cout << "COLUMNS MUST BE SMALLER THAN 12";
-			setColor(11);
-			gotoxy(midWidth - 8, midHeight - 5);
-			cout << "ENTER BOARD SIZE";
-
-			gotoxy(midWidth - 11, midHeight - 3);
-			cout << "ROWS (RECOMMENDED: 4): ";
-			gotoxy(midWidth - 1, midHeight - 2);
-			cin >> easyHeight;
-			gotoxy(midWidth - 13, midHeight - 1);
-			cout << "COLUMNS (RECOMMENDED: 7): ";
-			gotoxy(midWidth - 1, midHeight);
-			cin >> easyWidth;
-			setColor(12);
-			if (easyHeight * easyWidth % 2 == 0)
-			{
-				if (easyHeight < 7 && easyHeight > 0 && easyWidth < 12 && easyWidth > 0)
-					break;
-				else
-				{
-					gotoxy(midWidth - 3, midHeight + 2);
-					cout << "ERROR!";
-				}
-			}
-			else
-			{
-				gotoxy(midWidth - 3, midHeight + 2);
-				cout << "ERROR!";
-			}
-			setColor(7);
-		}
-		else
-		{
-			bool check = true;
-			setColor(11);
-			gotoxy(midWidth - 15, midHeight);
-			cout << "DO YOU WANT TO CHOOSE NEW SIZE";
-			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "YES,NO", 2))
-			{
-			case 0:
-				break;
-			case 1:
-			{
-				p->easy.isPlaying = false;
-				deleteBoard(p->eboard, easyHeight);
-				check = false;
-				break;
-			}
-			}
-			clearConsole();
-			if (check)
-				break;
-		}
-	}
-
-	int boardEasyHeight = easyHeight + 2,
-		boardEasyWidth = easyWidth + 2;
-
 	srand(time(NULL));
 	// If player want to continue playing
 	do
