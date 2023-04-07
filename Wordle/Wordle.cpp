@@ -2,7 +2,6 @@
 #include "PlayerInfo.h"
 #include "EasyMode.h"
 #include "HardMode.h"
-#include "Hack.h"
 
 int main()
 {
