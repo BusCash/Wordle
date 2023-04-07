@@ -249,7 +249,7 @@ void showCredits()
 	gotoxy(midWidth - 23, midHeight + 9);
 	cout << "Instructors: Bui Huy Thong - Tran Thi Thao Nhi";
 	setColor(109);
-	int barX = midWidth - 12, barY = midHeight + 11;
+	int barX = midWidth - 9, barY = midHeight + 11;
 	gotoxy(barX, barY);
 	cout << "          QUIT          ";
 	setColor(7);
