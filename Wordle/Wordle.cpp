@@ -1,4 +1,3 @@
-#include "ConsoleAndUtility.h"
 #include "PlayerInfo.h"
 #include "EasyMode.h"
 #include "HardMode.h"
@@ -6,17 +5,20 @@
 int main()
 {
 	generateWindow();
-	drawGraph(5);
-
+	thread playsoundtrack(playTrack);
+	drawGraph(10);
+	animation();
 	Player* list = NULL;
 	readPlayerFile(list);
 	Player* p = signIn(list);
 	Player* temp = new Player;
+	playsoundtrack.detach();
+
 	bool quit = false;
 
 	while (!quit)
 	{
-		drawTitle();
+		drawTitle(0);
 		updatePlayerFile(list);
 		switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "PLAY,LEADERBOARD,CREDITS,QUIT", 4))
 		{

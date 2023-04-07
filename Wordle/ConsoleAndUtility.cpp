@@ -13,16 +13,18 @@ void gotoxy(int x, int y)
 
 void setWindowSizeAndPos()
 {
-	HWND console1 = GetForegroundWindow();
-	RECT rectWindow;
+	HWND console = GetForegroundWindow();
+	RECT rectWindow, rectClient;
 
 	// Get the center position
-	GetClientRect(console1, &rectWindow);
+	GetClientRect(console, &rectClient);
+	GetWindowRect(console, &rectWindow);
+
 	int xPos = (GetSystemMetrics(SM_CXSCREEN) - windowWidth) / 2;
 	int yPos = (GetSystemMetrics(SM_CYSCREEN) - windowHeight) / 2;
 
 	// Set the position and size for the window
-	MoveWindow(console1, xPos, yPos, windowWidth, windowHeight, FALSE);
+	MoveWindow(console, xPos, yPos, windowWidth, windowHeight, TRUE);
 }
 
 void setCursor(int mode)
@@ -73,23 +75,30 @@ void drawGraph(int delayTime)
 	}
 }
 
-void drawTitle()
+void drawTitle(int delaytime)
 {
 	setColor(14);
 	int x = gameWidth / 4 - 15;
 	int y = gameHeight / 4;
+	Sleep(delaytime);
 	gotoxy(x, y);
 	cout << "~77:   .77!   :7777777.  :77777777!   ~7777777     !77.        :777777777?^";
+	Sleep(delaytime);
 	gotoxy(x, y + 1);
 	cout << "P@@! . .&@&..5#@?!7!Y@G? 7@@B!7!!B@P~ 5@@5!!5&G7. .#@@^        ~@@#";
+	Sleep(delaytime);
 	gotoxy(x, y + 2);
 	cout << "P@@J7&Y7&@#..&@&.   !@@P 7@@P   ~G@@7 5@@7   :&@#: #@&^        ~@@B!!!!!~~~";
+	Sleep(delaytime);
 	gotoxy(x, y + 3);
 	cout << "P@@@@&@@@@#..&@&.   !@@P 7@@#Y5G@577: 5@@7   :&@&: #@&:        ~@@B77777!!!";
+	Sleep(delaytime);
 	gotoxy(x, y + 4);
 	cout << "P@@B5:?B@@&..5#@7~!~J@BJ 7@@G:5#@&G~. 5@@5~~5&G?. .#@@?~!!!!!~ ~@@B";
+	Sleep(delaytime);
 	gotoxy(x, y + 5);
 	cout << "!??:   .??7.  ^???????.  ^?!!  .???J^ ~???????     7?????????7 :?????????J^";
+	Sleep(delaytime);
 }
 
 int getConsoleInput()
@@ -320,4 +329,61 @@ void playSound(int i)
 {
 	const wchar_t* soundfile[10] = { L"sound\\move.wav", L"sound\\enter.wav", L"sound\\hint.wav", L"sound\\error.wav", L"sound\\wrong.wav", L"sound\\streak1.wav", L"sound\\streak2.wav", L"sound\\streak3.wav", L"sound\\streak4.wav", L"sound\\streak5.wav" };
 	PlaySoundW(soundfile[i], NULL, SND_FILENAME | SND_ASYNC);
+}
+
+void playTrack()
+{
+	PlaySoundW(L"sound\\intro.wav", NULL, SND_FILENAME | SND_SYNC);
+}
+
+void animation() {
+	// Define the Nyan Cat animation frames
+	std::string frames[] = {
+		"_,------,",
+		"_|  /\\_/\\ ",
+		"~|_( o .o)" ,
+		" \"\"  \"\"  "
+	};
+
+	// Loop over the animation frames
+	for (int i = 0; i < gameWidth - 11 + 34; i++) {
+		// Output the Nyan Cat frame
+		if (i < gameWidth - 11)
+			for (int j = 0; j < 4; j++)
+			{
+				if (j == 0)
+					setColor(12 * 16);
+				else if (j == 1)
+					setColor(14 * 16);
+				else if (j == 2)
+					setColor(10 * 16);
+				else
+					setColor(9 * 16);
+				gotoxy(1 + i, midHeight + j);
+				cout << frames[j];
+			}
+		if (i > midWidth - 17)
+		{
+			int r;
+			for (int j = 0; j < 4; j++)
+			{
+				setColor(7);
+				r = rand() % 3;
+				gotoxy(1 + i - midWidth + 16 + r, midHeight + j);
+				cout << " ";
+			}
+		}
+		if (i > midWidth - 11)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				setColor(7);
+				gotoxy(1 + i - midWidth + 10, midHeight + j);
+				cout << " ";
+			}
+		}
+		Sleep(100);
+	}
+	clearConsole();
+
 }

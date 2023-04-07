@@ -169,7 +169,7 @@ Player* signIn(Player*& list)
 			gotoxy(midWidth - 5, midHeight + 2);
 			showWordDisplayEffect("LETS PLAY!");
 			clearConsole();
-			drawTitle();
+			drawTitle(0);
 
 			setColor(7);
 

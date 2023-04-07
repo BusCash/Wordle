@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include <mmsystem.h>
 #include <fstream>
+#include <thread>
+#include <chrono>
 
 #ifndef STRUCT_H
 #define STRUCT_H
