@@ -67,17 +67,17 @@ bool checkNewPlayer()
 		cout << "ARE YOU NEW PLAYER ?";
 		switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "YES,NO I'M MASTER,I DON'T WANT TO PLAY ANYMORE", 3))
 		{
-		case 0:
+		case 0: // I DONT WANT TO PLAY -> go back
 			clearConsole();
 			setColor(4);
 			gotoxy(midWidth - 11, midHeight + 2);
 			cout << "PLAY AT LEAST 1 OR DIE";
 			Sleep(1000);
 			break;
-		case 1:
+		case 1: // YES -> return true
 			clearConsole();
 			return true;
-		case 3:
+		case 3: // NO -> return false
 			clearConsole();
 			return false;
 		}
@@ -89,8 +89,9 @@ Player* signIn(Player*& list)
 	Player* p = NULL;
 	while (true)
 	{
+		// Check if player is new or not
 		bool isNew = checkNewPlayer();
-		if (!isNew)
+		if (!isNew) // If not new -> ask for id
 		{
 			string id = "";
 			setColor(11);
@@ -103,8 +104,9 @@ Player* signIn(Player*& list)
 			setCursor(0);
 
 			clearConsole();
-
 			isNew = true;
+
+			// Find the given id in the list
 			if (list != NULL)
 			{
 				Player* curnode = list;
@@ -120,42 +122,70 @@ Player* signIn(Player*& list)
 				}
 			}
 
-			if (isNew)
+			if (isNew) // If not found -> go back
 			{
 				setColor(4);
 				gotoxy(midWidth - 10, midHeight + 2);
 				cout << "YOU ARE NOT A MASTER";
 				Sleep(1000);
 			}
-			else
+			else	   // If found -> play
 			{
 				setColor(4);
 				gotoxy(midWidth - 11, midHeight + 2);
-				cout << "WELCOME BACK, " << p->name;
+				Sleep(1000);
+				showWordDisplayEffect("WELCOME BACK, " + string(p->name));
 				Sleep(1000);
 				clearConsole();
 				break;
 			}
 		}
-		else
+		else		   // If new -> register new
 		{
 			p = new Player;
-			setColor(11);
-			gotoxy(midWidth - 15, midHeight + 2);
-			cout << "WHAT DO YOU WANT TO BE CALLED:";
+			bool exist = true;
+			while (exist)
+			{
+				exist = false;
+				setColor(11);
+				gotoxy(midWidth - 15, midHeight + 2);
+				cout << "WHAT DO YOU WANT TO BE CALLED:";
 
-			gotoxy(midWidth - 4, midHeight + 3);
-			setCursor(1);
-			cin >> p->name;
-			setCursor(0);
+				gotoxy(midWidth - 4, midHeight + 3);
+				setCursor(1);
+				cin >> p->name;
+				setCursor(0);
 
-			gotoxy(midWidth - 11, midHeight + 5);
-			cout << "AN ID TO REGCONIZE YOU:";
+				gotoxy(midWidth - 11, midHeight + 5);
+				cout << "AN ID TO REGCONIZE YOU:";
 
-			gotoxy(midWidth - 4, midHeight + 6);
-			setCursor(1);
-			cin >> p->id;
-			setCursor(0);
+				gotoxy(midWidth - 4, midHeight + 6);
+				setCursor(1);
+				cin >> p->id;
+				setCursor(0);
+
+				if (list != NULL)
+				{
+					Player* curnode = list;
+					while (curnode != NULL)
+					{
+						if (string(p->id) == string(curnode->id))
+						{
+							clearConsole();
+							setColor(12);
+							gotoxy(midWidth - 10, midHeight + 2);
+							cout << "THIS ID HAD BEEN USED";
+							gotoxy(midWidth - 7, midHeight + 3);
+							cout << "ENTER A NEW ONE";
+							Sleep(1000);
+							clearConsole();
+							exist = true;
+							break;
+						}
+						curnode = curnode->next;
+					}
+				}
+			}
 
 			clearConsole();
 			setColor(11);
@@ -165,8 +195,8 @@ Player* signIn(Player*& list)
 
 			clearConsole();
 			setColor(11);
-			Sleep(1000);
 			gotoxy(midWidth - 5, midHeight + 2);
+			Sleep(1000);
 			showWordDisplayEffect("LETS PLAY!");
 			clearConsole();
 			drawTitle(0);
@@ -192,6 +222,8 @@ void showWordDisplayEffect(string s)
 
 Player* sortRank(Player* list, string mode)
 {
+	// Sort the list of players based on mode and score
+	// Sort using Bubble Sort
 	Player* end, * prevnode, * curnode, * nextnode, * temp;
 	if (mode == "easy")
 	{

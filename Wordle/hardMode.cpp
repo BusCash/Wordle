@@ -22,6 +22,7 @@ void addTail(Board_2*& head, Board_2* newnode)
 
 Board_2* findNode(Board_2** board, int i, int j)
 {
+	// Check if the order are within the bounds of the game board
 	if (i >= 0 && i < boardHardHeight && j >= 0 && j < boardHardWidth)
 	{
 		Board_2* curnode = board[i];
@@ -46,18 +47,19 @@ void generateBoard(Board_2** board)
 			newnode->next = NULL;
 
 			// Set the position for the cell
-			newnode->x = j * cellWidth + midWidth - (boardHardWidth * cellWidth - 1) / 2;
-			newnode->y = i * (cellHeight + 1) + midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2;
+			newnode->cell.x = j * cellWidth + midWidth - (boardHardWidth * cellWidth - 1) / 2;
+			newnode->cell.y = i * (cellHeight + 1) + midHeight + 2 - (boardHardHeight * (cellHeight + 1) - 1) / 2;
 
 			// Set the position for the character
-			newnode->cx = newnode->x + 2;
-			newnode->cy = newnode->y + 1;
+			newnode->character.x = newnode->cell.x + 2;
+			newnode->character.y = newnode->cell.y + 1;
 
+			// Add the node to the board
 			addTail(board[i], newnode);
 		}
 	}
 
-	// Set the edge unavailable
+	// Set the board edge unavailable
 	for (int i = 0; i < boardHardHeight; i++)
 	{
 		findNode(board, i, 0)->isValid = false;
@@ -122,6 +124,7 @@ void displayBoard(Board_2** board, int delaytime)
 
 bool checkRowMatch(Board_2** board, int j1, int j2, int i)
 {
+	// Check if between 2 cells in a row is clear or if next to each other
 	for (int j = min(j1, j2) + 1; j < max(j1, j2); j++)
 		if (findNode(board, i, j)->c != ' ')
 			return false;
@@ -130,6 +133,7 @@ bool checkRowMatch(Board_2** board, int j1, int j2, int i)
 
 bool checkColMatch(Board_2** board, int i1, int i2, int j)
 {
+	// Check if between 2 cells in a column is clear or if next to each other
 	for (int i = min(i1, i2) + 1; i < max(i1, i2); i++)
 		if (findNode(board, i, j)->c != ' ')
 			return false;
@@ -138,13 +142,17 @@ bool checkColMatch(Board_2** board, int i1, int i2, int j)
 
 bool checkIMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 {
+	// Check if 2 cells are in the same row or collumn
+	// If so, use the 2 functions above
+
 	if (j1 == j2)
 	{
 		if (checkColMatch(board, i1, i2, j1))
 		{
 			if (type == 0)
 			{
-				findNode(board, i1, j1)->drawArrow(findNode(board, i2, j1)->cx, findNode(board, i2, j1)->cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				findNode(board, i1, j1)->drawArrow(findNode(board, i2, j1)->character.x, findNode(board, i2, j1)->character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int i = min(i1, i2) + 1; i < max(i1, i2); i++)
@@ -160,7 +168,8 @@ bool checkIMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 		{
 			if (type == 0)
 			{
-				findNode(board, i1, j1)->drawArrow(findNode(board, i1, j2)->cx, findNode(board, i1, j2)->cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				findNode(board, i1, j1)->drawArrow(findNode(board, i1, j2)->character.x, findNode(board, i1, j2)->character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j1, j2) + 1; j < max(j1, j2); j++)
@@ -175,17 +184,18 @@ bool checkIMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 
 bool checkLMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 {
-	// Check 2 corners created by those points 
-	//	-> If through
-	//	-> Check the 2 lines created by that corner to those points
+	// Check 2 corners created by those cells 
+	//	-> If the corners is clear
+	//	-> Check the 2 lines from that corner to those cells
 
 	if (findNode(board, i1, j2)->c == ' ')
 		if (checkRowMatch(board, j1, j2, i1) && checkColMatch(board, i1, i2, j2))
 		{
 			if (type == 0)
 			{
-				findNode(board, i1, j1)->drawArrow(findNode(board, i1, j2)->cx, findNode(board, i1, j2)->cy, i1, j1, i2, j2);
-				findNode(board, i1, j2)->drawArrow(findNode(board, i2, j2)->cx, findNode(board, i2, j2)->cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				findNode(board, i1, j1)->drawArrow(findNode(board, i1, j2)->character.x, findNode(board, i1, j2)->character.y, i1, j1, i2, j2);
+				findNode(board, i1, j2)->drawArrow(findNode(board, i2, j2)->character.x, findNode(board, i2, j2)->character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j1, j2); j <= max(j1, j2); j++)
@@ -202,8 +212,9 @@ bool checkLMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 		{
 			if (type == 0)
 			{
-				findNode(board, i2, j2)->drawArrow(findNode(board, i2, j1)->cx, findNode(board, i2, j1)->cy, i1, j1, i2, j2);
-				findNode(board, i2, j1)->drawArrow(findNode(board, i1, j1)->cx, findNode(board, i1, j1)->cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				findNode(board, i2, j2)->drawArrow(findNode(board, i2, j1)->character.x, findNode(board, i2, j1)->character.y, i1, j1, i2, j2);
+				findNode(board, i2, j1)->drawArrow(findNode(board, i1, j1)->character.x, findNode(board, i1, j1)->character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j2, j1); j <= max(j2, j1); j++)
@@ -220,7 +231,7 @@ bool checkLMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 bool checkZMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 {
 	// Check all way in a rectangle created by p1 and p2
-	// Find the point has min j and the point has min i
+	// Find the cell has min j and the cell has min i to check
 
 	Position jmin, jmax;
 	if (j1 < j2)
@@ -251,9 +262,10 @@ bool checkZMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, j)->cx, findNode(board, jmin.x, j)->cy, i1, j1, i2, j2);
-					findNode(board, jmin.x, j)->drawArrow(findNode(board, jmax.x, j)->cx, findNode(board, jmax.x, j)->cy, i1, j1, i2, j2);
-					findNode(board, jmax.x, j)->drawArrow(findNode(board, jmax.x, jmax.y)->cx, findNode(board, jmax.x, jmax.y)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, j)->character.x, findNode(board, jmin.x, j)->character.y, i1, j1, i2, j2);
+					findNode(board, jmin.x, j)->drawArrow(findNode(board, jmax.x, j)->character.x, findNode(board, jmax.x, j)->character.y, i1, j1, i2, j2);
+					findNode(board, jmax.x, j)->drawArrow(findNode(board, jmax.x, jmax.y)->character.x, findNode(board, jmax.x, jmax.y)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int jd = jmin.y + 1; jd < j; jd++)
@@ -297,9 +309,10 @@ bool checkZMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, i, imin.y)->cx, findNode(board, i, imin.y)->cy, i1, j1, i2, j2);
-					findNode(board, i, imin.y)->drawArrow(findNode(board, i, imax.y)->cx, findNode(board, i, imax.y)->cy, i1, j1, i2, j2);
-					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, i, imax.y)->cx, findNode(board, i, imax.y)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, i, imin.y)->character.x, findNode(board, i, imin.y)->character.y, i1, j1, i2, j2);
+					findNode(board, i, imin.y)->drawArrow(findNode(board, i, imax.y)->character.x, findNode(board, i, imax.y)->character.y, i1, j1, i2, j2);
+					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, i, imax.y)->character.x, findNode(board, i, imax.y)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int id = imin.x + 1; id < i; id++)
@@ -319,6 +332,10 @@ bool checkZMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 
 bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 {
+	// Check if the line of the min pos cell and the cell in same line but have the max pos is clear
+	// If so, check if the 2 next cells is clear
+	// If so, check the line between those cells
+
 	int downright = 1, upleft = -1;
 
 	Position jmin, jmax;
@@ -347,9 +364,10 @@ bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, jmin.x, jnext)->drawArrow(findNode(board, jmax.x, jnext)->cx, findNode(board, jmax.x, jnext)->cy, i1, j1, i2, j2);
-					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, jnext)->cx, findNode(board, jmin.x, jnext)->cy, i1, j1, i2, j2);
-					findNode(board, jmax.x, jmax.y)->drawArrow(findNode(board, jmax.x, jnext)->cx, findNode(board, jmax.x, jnext)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, jmin.x, jnext)->drawArrow(findNode(board, jmax.x, jnext)->character.x, findNode(board, jmax.x, jnext)->character.y, i1, j1, i2, j2);
+					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, jnext)->character.x, findNode(board, jmin.x, jnext)->character.y, i1, j1, i2, j2);
+					findNode(board, jmax.x, jmax.y)->drawArrow(findNode(board, jmax.x, jnext)->character.x, findNode(board, jmax.x, jnext)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = min(jmin.x, jmax.x); i <= max(jmin.x, jmax.x); i++)
@@ -376,9 +394,10 @@ bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, jmin.x, jnext)->drawArrow(findNode(board, jmax.x, jnext)->cx, findNode(board, jmax.x, jnext)->cy, i1, j1, i2, j2);
-					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, jnext)->cx, findNode(board, jmin.x, jnext)->cy, i1, j1, i2, j2);
-					findNode(board, jmax.x, jmax.y)->drawArrow(findNode(board, jmax.x, jnext)->cx, findNode(board, jmax.x, jnext)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, jmin.x, jnext)->drawArrow(findNode(board, jmax.x, jnext)->character.x, findNode(board, jmax.x, jnext)->character.y, i1, j1, i2, j2);
+					findNode(board, jmin.x, jmin.y)->drawArrow(findNode(board, jmin.x, jnext)->character.x, findNode(board, jmin.x, jnext)->character.y, i1, j1, i2, j2);
+					findNode(board, jmax.x, jmax.y)->drawArrow(findNode(board, jmax.x, jnext)->character.x, findNode(board, jmax.x, jnext)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = min(jmin.x, jmax.x); i <= max(jmin.x, jmax.x); i++)
@@ -421,9 +440,10 @@ bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, inext, imin.y)->cx, findNode(board, inext, imin.y)->cy, i1, j1, i2, j2);
-					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, inext, imax.y)->cx, findNode(board, inext, imax.y)->cy, i1, j1, i2, j2);
-					findNode(board, inext, imin.y)->drawArrow(findNode(board, inext, imax.y)->cx, findNode(board, inext, imax.y)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, inext, imin.y)->character.x, findNode(board, inext, imin.y)->character.y, i1, j1, i2, j2);
+					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, inext, imax.y)->character.x, findNode(board, inext, imax.y)->character.y, i1, j1, i2, j2);
+					findNode(board, inext, imin.y)->drawArrow(findNode(board, inext, imax.y)->character.x, findNode(board, inext, imax.y)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = imin.x + 1; i < inext; i++)
@@ -450,9 +470,10 @@ bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, inext, imin.y)->cx, findNode(board, inext, imin.y)->cy, i1, j1, i2, j2);
-					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, inext, imax.y)->cx, findNode(board, inext, imax.y)->cy, i1, j1, i2, j2);
-					findNode(board, inext, imin.y)->drawArrow(findNode(board, inext, imax.y)->cx, findNode(board, inext, imax.y)->cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					findNode(board, imin.x, imin.y)->drawArrow(findNode(board, inext, imin.y)->character.x, findNode(board, inext, imin.y)->character.y, i1, j1, i2, j2);
+					findNode(board, imax.x, imax.y)->drawArrow(findNode(board, inext, imax.y)->character.x, findNode(board, inext, imax.y)->character.y, i1, j1, i2, j2);
+					findNode(board, inext, imin.y)->drawArrow(findNode(board, inext, imax.y)->character.x, findNode(board, inext, imax.y)->character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = inext + 1; i < imin.x; i++)
@@ -496,16 +517,20 @@ void moveCell(Board_2** board, int i, int j)
 	if (j == 11)
 		return;
 
+	// Find the first deleted cell from the left
 	Board_2* curnode = board[i]->next;
 	while (curnode->c != ' ')
 		curnode = curnode->next;
 
+	// Move each non-deleted cell behind the first deleted cell to the leftmost empty space
 	Board_2* nextnode = curnode->next;
 	while (nextnode->next != NULL)
 	{
 		while (nextnode->c == ' ')
 		{
 			nextnode = nextnode->next;
+
+			// If there are no more non-deleted cells, deleted all the cell to the right
 			if (nextnode->next == NULL)
 			{
 				while (curnode->next != NULL)
@@ -517,6 +542,7 @@ void moveCell(Board_2** board, int i, int j)
 			}
 		}
 
+		// Swap the empty cell with the non-deleted cell and mark it as valid cell
 		if (!curnode->isValid)
 			curnode->isValid = true;
 		swap(curnode->c, nextnode->c);
@@ -539,14 +565,16 @@ bool checkValidBoard(Board_2** board)
 		{
 			for (int j = 1; j < hardWidth + 1; j++)
 			{
-				if (findNode(board, i, j)->c == check && findNode(board, i, j)->isValid) // Save all the check character positions in pos arr
+				// Find the postion of cells have check character
+				// Save all the positions in a pos array
+				if (findNode(board, i, j)->c == check && findNode(board, i, j)->isValid)
 				{
 					pos[cnt++] = i;
 					pos[cnt++] = j;
 				}
 			}
 		}
-		for (int i = 0; i < cnt - 2; i += 2) // Pos arr stores the pos of 1 char in i and i+1;
+		for (int i = 0; i < cnt - 2; i += 2) // Pos arr stores the position of 1 char in i and i+1;
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 				if (checkMatch(board, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Check if there are any ways lefts
@@ -559,10 +587,12 @@ bool checkValidBoard(Board_2** board)
 
 void resetPlayingBoard(Board_2** board)
 {
+	// Set all the cells back to valid
 	for (int i = 1; i < hardHeight + 1; i++)
 		for (int j = 1; j < hardWidth + 1; j++)
 			findNode(board, i, j)->isValid = true;
 
+	// Reset the cell character
 	int restCount = (hardHeight * hardWidth) / 2;
 	while (restCount)
 	{
@@ -593,6 +623,8 @@ void showMoveSuggestion(Board_2** cell, int inow, int jnow)
 		{
 			for (int j = 1; j < hardWidth + 1; j++)
 			{
+				// Find the postion of cells have check character
+				// Save all the positions in a pos array
 				if (findNode(cell, i, j)->c == check && findNode(cell, i, j)->isValid)
 				{
 					pos[cnt++] = i;
@@ -605,7 +637,8 @@ void showMoveSuggestion(Board_2** cell, int inow, int jnow)
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 			{
-				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Find 2 match cell -> show it 0,2s
+				// Check if 2 cell are matched -> Show it on screen for 0,2s
+				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1))
 				{
 					findNode(cell, pos[i], pos[i + 1])->isHint = true;
 					findNode(cell, pos[j], pos[j + 1])->isHint = true;
@@ -635,7 +668,7 @@ void showMoveSuggestion(Board_2** cell, int inow, int jnow)
 
 int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount)
 {
-	findNode(p->hboard, i, j)->drawCell(); // Set the selected cell;
+	findNode(p->hboard, i, j)->drawCell(); // Set the status of selected cell;
 	Sleep(200);
 
 	findNode(p->hboard, iselected, jselected)->isSelected = false;
@@ -643,7 +676,7 @@ int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselecte
 
 	int check = 0;
 
-	if (checkMatch(p->hboard, iselected, jselected, i, j, 0)) // If match -> delete cell
+	if (checkMatch(p->hboard, iselected, jselected, i, j, 0)) // Check if 2 cell are matched -> delete cell
 	{
 		if (p->hard.streak < 5)
 			playSound(5);
@@ -656,12 +689,14 @@ int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselecte
 		else
 			playSound(9);
 
+		// Set the character of deleted cells back to null
 		findNode(p->hboard, iselected, jselected)->c = ' ';
 		findNode(p->hboard, i, j)->c = ' ';
 
 		findNode(p->hboard, iselected, jselected)->deleteCell(7);
 		findNode(p->hboard, i, j)->deleteCell(7);
 
+		// Move other cells to the left
 		moveCell(p->hboard, iselected, jselected);
 		moveCell(p->hboard, i, j);
 
@@ -669,6 +704,7 @@ int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselecte
 
 		deletedCount += 2;
 
+		// Check if the board is still valid
 		if (!checkValidBoard(p->hboard) && deletedCount != hardHeight * hardWidth)
 			return -1;
 
@@ -684,7 +720,7 @@ int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselecte
 		findNode(p->hboard, iselected, jselected)->drawCell();
 	}
 
-	// When done process -> set the current standing cell
+	// When done process -> set the status of current standing cell
 	findNode(p->hboard, i, j)->isStopped = true;
 	findNode(p->hboard, i, j)->drawCell();
 	findNode(p->hboard, i, j)->isStopped = false;
@@ -694,6 +730,7 @@ int processSelectedHardCell(Player* p, int i, int j, int iselected, int jselecte
 
 void processHardPoint(Player* p)
 {
+	// The point will increase depends on streak
 	if (p->hard.streak == 0)
 		return;
 	if (p->hard.streak < 5)
@@ -726,11 +763,11 @@ bool processAction(Board_2** cell, Player* p)
 	{
 		if (findNode(cell, i, j)->isStopped)
 		{
-			findNode(cell, oldi, oldj)->drawCell(); // Set the previous standing cell back to default
+			findNode(cell, oldi, oldj)->drawCell(); // Set the status of previous standing cell back to default
 			oldi = i;
 			oldj = j;
 
-			findNode(cell, i, j)->drawCell(); // Set the current standing cell
+			findNode(cell, i, j)->drawCell(); // Set the status of current standing cell
 			findNode(cell, i, j)->isStopped = false;
 		}
 
@@ -740,7 +777,7 @@ bool processAction(Board_2** cell, Player* p)
 			findNode(cell, i, j)->drawCell();
 			Sleep(1500);
 			clearConsole();
-			if (!win)
+			if (!win) // LOSE
 			{
 				setColor(12);
 				gotoxy(midWidth - 10, midHeight + 2);
@@ -748,35 +785,35 @@ bool processAction(Board_2** cell, Player* p)
 				setColor(7);
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "RESTART,BACK TO MAIN MENU", 2))
 				{
-				case 0:
+				case 0: // BACK TO MAIN MENU -> delete board and quit
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard);
 					clearConsole();
 					return false;
-				case 1:
+				case 1: // RESTART NEW GAME -> delete board and create new
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard);
 					return true;
 				}
 			}
-			else
+			else	// WIN
 			{
 				p->hard.isFinised = true;
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,SAVE AND MAIN MENU,JUST QUIT", 4))
 				{
-				case 0: // If quit and don't save
+				case 0: // JUST QUIT -> delete board and reset point
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard);
 					clearConsole();
 					return false;
-				case 1: // If continue playing with the current parameter
+				case 1: // CONTINUE -> reset new board
 					p->hard.isPlaying = true;
 					return true;
-				case 2: // If continue playing with new parameter
+				case 2: // RESTART -> delete board and create new
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard);
 					return true;
-				case 3: // If quit and save parameter
+				case 3: // SAVE AND MAIN MENU -> save and out
 					p->hard.isPlaying = true;
 					clearConsole();
 					return false;
@@ -823,7 +860,7 @@ bool processAction(Board_2** cell, Player* p)
 			findNode(cell, i, j)->isStopped = true;
 			break;
 		}
-		case 5:
+		case 5: // SPACE or ENTER -> select a cell
 		{
 			// If a cell is valid and not selected
 			if (!findNode(cell, i, j)->isSelected && findNode(cell, i, j)->isValid)
@@ -871,7 +908,7 @@ bool processAction(Board_2** cell, Player* p)
 			}
 			break;
 		}
-		case 6:
+		case 6: // H -> show hint if valid
 		{
 			if (p->hard.hint)
 			{
@@ -880,7 +917,7 @@ bool processAction(Board_2** cell, Player* p)
 			}
 			break;
 		}
-		case 7: // If ESC is pressed
+		case 7: // ESC
 		{
 			clearConsole();
 			bool pause = true;
@@ -888,27 +925,27 @@ bool processAction(Board_2** cell, Player* p)
 			{
 				switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "RESUME,RESTART,QUIT", 3))
 				{
-				case 0: // If QUIT is selected
+				case 0: // QUIT -> save or not save
 					switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "SAVE,DON'T SAVE,BACK", 3))
 					{
 					case 0: // BACK
 						break;
-					case 1: // SAVE
+					case 1: // SAVE 
 						p->hard.isPlaying = true;
 						return false;
-					case 3: // DON'T SAVE
+					case 3: // DON'T SAVE -> delete board
 						p->hard.isPlaying = false;
 						deleteBoard(p->hboard);
 						return false;
 					}
 					break;
-				case 1: // If RESUME -> go back
+				case 1: // RESUME -> go back
 					pause = false;
 					findNode(cell, i, j)->isStopped = true;
 					displayBoard(p->hboard, 0);
 					showParameter(p, "hard");
 					break;
-				case 3: // If RESTART -> delete
+				case 3: // RESTART -> delete board and create new
 					p->hard.isPlaying = false;
 					deleteBoard(p->hboard);
 					return true;
@@ -920,6 +957,7 @@ bool processAction(Board_2** cell, Player* p)
 			break;
 		}
 
+		// Update parameter after an action
 		showParameter(p, "hard");
 	}
 }
@@ -932,7 +970,7 @@ void hardMode(Player* p, int height, int width)
 	boardHardWidth = hardWidth + 2;
 
 	srand(time(NULL));
-	// If player want to continue playing
+	// A loop for continue playing
 	do
 	{
 		// Check if the board is being played or not

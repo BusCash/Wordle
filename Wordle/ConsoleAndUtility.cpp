@@ -29,9 +29,10 @@ void setWindowSizeAndPos()
 
 void setCursor(int mode)
 {
+	// Set cursor invisible 0: on, 1: off
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	CONSOLE_CURSOR_INFO lpCursor;
-	lpCursor.bVisible = mode; // Set cursor invisible 0:on, 1:off
+	lpCursor.bVisible = mode;
 	lpCursor.dwSize = 20;
 	SetConsoleCursorInfo(console, &lpCursor);
 }
@@ -45,6 +46,7 @@ void generateWindow()
 
 void setColor(int color)
 {
+	// Set the color for the place: background_color * 16 + text_color
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(console, color);
 }
@@ -77,6 +79,7 @@ void drawGraph(int delayTime)
 
 void drawTitle(int delaytime)
 {
+	// Print the title
 	setColor(14);
 	int x = gameWidth / 4 - 15;
 	int y = gameHeight / 4;
@@ -149,15 +152,22 @@ void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int
 	int numPos = 0;
 	string name;
 	int namePos;
+
+	// Set the color of the bar
 	setColor(bColor * 16 + tColor);
+
+	// Loop through each y-position in the barY string
 	while (numPos != -1)
 	{
+		// Get the next y-position in the barY string
 		numPos = barY.find(',');
 		numY = stoi(barY.substr(0, (numPos == -1) ? barY.length() : numPos));
 
+		// Get the next string in the s string
 		namePos = s.find(',');
 		name = s.substr(0, (namePos == -1) ? s.length() : namePos);
 
+		// If the current y-position is the one to move, update the content of the bar
 		if (moveY == numY)
 		{
 			gotoxy(barX, numY);
@@ -166,11 +176,13 @@ void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int
 			cout << name;
 		}
 
+		// If there are more y-positions or strings, remove the processed part from the input strings
 		if (numPos > 0)
 			barY.erase(0, numPos + 1);
 		if (namePos > 0)
 			s.erase(0, namePos + 1);
 	}
+
 	setColor(7);
 }
 
@@ -186,6 +198,7 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 	{
 		if (check == true)
 		{
+			// Set the old selected bar to default
 			changeBarStatus(barX, sbarY, oldY, barName, 0, 15);
 			oldY = moveY;
 
@@ -196,7 +209,7 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 
 		switch (getConsoleInput())
 		{
-		case 1:
+		case 1: // UP
 		{
 			check = true;
 			if (moveY != barY)
@@ -205,7 +218,7 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 				moveY = barY + 2 * (barNum - 1);
 			break;
 		}
-		case 2:
+		case 2: // DOWN
 		{
 			check = true;
 			if (moveY != barY + 2 * (barNum - 1))
@@ -214,7 +227,7 @@ int generateMenu(int barX, int barY, string sbarY, string barName, int barNum)
 				moveY = barY;
 			break;
 		}
-		case 5:
+		case 5: // SPACEBAR or ENTER
 		{
 			for (int i = barY; i <= barY + 2 * (barNum - 1); i += 2)
 				changeBarStatus(barX, sbarY, i, "", 0, 0);
@@ -249,6 +262,25 @@ void clearConsole()
 
 void showCredits()
 {
+	string logo[]{
+
+	" /$$      /$$  /$$$$$$  /$$$$$$$  /$$$$$$$  /$$       /$$$$$$$$",
+	"| $$  /$ | $$ /$$__  $$| $$__  $$| $$__  $$| $$      | $$_____/ ",
+	"| $$ /$$$| $$| $$  ` $$| $$  ` $$| $$  ` $$| $$      | $$",
+	"| $$/$$ $$ $$| $$  | $$| $$$$$$$/| $$  | $$| $$      | $$$$$",
+	"| $$$$_  $$$$| $$  | $$| $$__  $$| $$  | $$| $$      | $$__/",
+	"| $$$/ `  $$$| $$  | $$| $$  ` $$| $$  | $$| $$      | $$",
+	"| $$/   `  $$|  $$$$$$/| $$  | $$| $$$$$$$/| $$$$$$$$| $$$$$$$$",
+	"|__/     `__/ `______/ |__/  |__/|_______/ |________/|________/",
+
+	};
+	for (int i = 0; i < 8; i++)
+	{
+		gotoxy(midWidth - 31, midHeight - 10 + i);
+		cout << logo[i];
+	}
+	gotoxy(midWidth - 9, midHeight + 1);
+	cout << "THANKS FOR PLAYING";
 	gotoxy(midWidth - 13, midHeight + 6);
 	cout << "22127126 - Nguyen Duy Hoang";
 	gotoxy(midWidth - 12, midHeight + 7);
@@ -292,11 +324,13 @@ void showParameter(Player* p, string mode)
 		hint = p->hard.hint;
 	}
 
+	// Show current score
 	setColor(10);
 	gotoxy(3, 2);
 	cout << "SCORE: ";
 	cout << point;
 
+	// Show streak -> change color depend on streak series
 	gotoxy(midWidth - 5, 2);
 	if (streak < 5)
 		setColor(7);
@@ -317,6 +351,7 @@ void showParameter(Player* p, string mode)
 		cout << streak;
 	}
 
+	// Show number of hints left
 	setColor(13);
 	gotoxy(gameWidth - 12 - 3, 2);
 	cout << "HINT(H): ";
@@ -331,24 +366,31 @@ void playSound(int i)
 	PlaySoundW(soundfile[i], NULL, SND_FILENAME | SND_ASYNC);
 }
 
-void playTrack()
-{
-	PlaySoundW(L"sound\\intro.wav", NULL, SND_FILENAME | SND_SYNC);
-}
 
-void animation() {
-	// Define the Nyan Cat animation frames
-	std::string frames[] = {
-		"_,------,",
-		"_|  /\\_/\\ ",
+void intro()
+{
+	// Define the animation frames
+	string frames[] = {
+		"_,------, ",
+		"_|  /``_/`",
 		"~|_( o .o)" ,
-		" \"\"  \"\"  "
+		" '~'~'~'~'"
 	};
 
+	// Define the logo
+	string logo[] = {
+	 " _      __  ____    ___    ___    __    ____",
+	 "| | /| / / / __ |  / _ |  / _ |  / /   / __/",
+	 "| |/ |/ / / /_/ / / , _/ / // / / /__ / _/  ",
+	 "|__/|__/  |____/ /_/|_| /____/ /____//___/  "
+	};
+	PlaySoundW(L"sound\\intro.wav", NULL, SND_FILENAME | SND_ASYNC);
+
 	// Loop over the animation frames
-	for (int i = 0; i < gameWidth - 11 + 34; i++) {
-		// Output the Nyan Cat frame
-		if (i < gameWidth - 11)
+	for (int i = 0; i < gameWidth - 11 + 34; i++)
+	{
+		// Output the frame
+		if (i < gameWidth - 11 + 9)
 			for (int j = 0; j < 4; j++)
 			{
 				if (j == 0)
@@ -359,9 +401,20 @@ void animation() {
 					setColor(10 * 16);
 				else
 					setColor(9 * 16);
-				gotoxy(1 + i, midHeight + j);
-				cout << frames[j];
+				if (i < 10)
+					for (int k = i; k >= 0; k--)
+					{
+						gotoxy(1 + k, midHeight + j);
+						cout << frames[j][9 - (i - k)];
+					}
+				else
+				{
+					gotoxy(1 + i - 9, midHeight + j);
+					cout << frames[j];
+				}
 			}
+
+		// Effect
 		if (i > midWidth - 17)
 		{
 			int r;
@@ -373,6 +426,8 @@ void animation() {
 				cout << " ";
 			}
 		}
+
+		// Delete frame
 		if (i > midWidth - 11)
 		{
 			for (int j = 0; j < 4; j++)
@@ -386,4 +441,12 @@ void animation() {
 	}
 	clearConsole();
 
+	// Display logo at the end
+	setColor(14);
+	for (int j = 0; j < 4; j++)
+	{
+		gotoxy(midWidth - 22, midHeight + j);
+		cout << logo[j];
+	}
+	Sleep(5000);
 }

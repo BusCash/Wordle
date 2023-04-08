@@ -4,27 +4,28 @@
 
 int main()
 {
+	// Setup window and intro
 	generateWindow();
-	thread playsoundtrack(playTrack);
 	drawGraph(10);
-	animation();
+	intro();
+
+	// Setup player information
 	Player* list = NULL;
 	readPlayerFile(list);
 	Player* p = signIn(list);
 	Player* temp = new Player;
-	playsoundtrack.detach();
 
+	// Process the game
 	bool quit = false;
-
 	while (!quit)
 	{
 		drawTitle(0);
 		updatePlayerFile(list);
 		switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "PLAY,LEADERBOARD,CREDITS,QUIT", 4))
 		{
-		case 0: // QUIT
+		case 0: // QUIT -> check if there is any board not completed
 		{
-			if (p->easy.isPlaying || p->hard.isPlaying || temp->easy.isPlaying || temp->hard.isPlaying)
+			if (p->easy.isPlaying || p->hard.isPlaying || temp->easy.isPlaying || temp->hard.isPlaying) // If yes -> ask for certainty
 			{
 				setColor(12);
 				gotoxy(midWidth - 25, midHeight + 2);
@@ -33,7 +34,7 @@ int main()
 				cout << "QUIT GAME WILL NOT SAVE YOUR STAGE";
 				switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "BACK,QUIT", 2))
 				{
-				case 0:
+				case 0: // QUIT -> delete board
 					quit = true;
 					if (p->easy.isPlaying)
 					{
@@ -56,12 +57,12 @@ int main()
 						deleteBoard(temp->hboard);
 					}
 					break;
-				case 1:
+				case 1: // BACK
 					clearConsole();
 					break;
 				}
 			}
-			else
+			else // If no -> just quit
 				quit = true;
 			break;
 		}
@@ -69,34 +70,35 @@ int main()
 		{
 			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "EASY,HARDCORE,CUSTOM,BACK", 4))
 			{
-			case 0:
+			case 0: // BACK
 				break;
-			case 1:
+			case 1: // EASY -> go to easymode
 				clearConsole();
 				easyMode(p, 4, 7);
 				break;
-			case 2:
+			case 2: // HARDCORE -> go to hardmode
 				clearConsole();
 				hardMode(p, 6, 11);
 				break;
-			case 3:
+			case 3: // CUSTOM -> depend on player choice
 				clearConsole();
 				int height, width;
 				while (true)
 				{
 					clearConsole();
-					if (temp->easy.isPlaying || temp->hard.isPlaying)
+					if (temp->easy.isPlaying || temp->hard.isPlaying) // Check if there is any custom board not completed
 					{
+						// If yes -> ask to create new or continue
 						bool check = false;
 						setColor(11);
 						gotoxy(midWidth - 15, midHeight - 3);
 						cout << "DO YOU WANT TO CREATE NEW BOARD";
 						switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "YES,NO", 2))
 						{
-						case 0:
+						case 0: // NO
 							check = true;
 							break;
-						case 1:
+						case 1: // YES -> delete board
 							if (temp->easy.isPlaying)
 							{
 								temp->easy.isPlaying = false;
@@ -112,6 +114,8 @@ int main()
 						if (check)
 							break;
 					}
+
+					// If there is no board not completed -> Choose size
 					setColor(11);
 					gotoxy(midWidth - 8, midHeight - 3);
 					cout << "CHOOSE BOARD SIZE";
@@ -134,7 +138,8 @@ int main()
 							break;
 				}
 
-				if (!temp->easy.isPlaying && !temp->hard.isPlaying)
+				// After chose size -> check if there is any board not completed
+				if (!temp->easy.isPlaying && !temp->hard.isPlaying) // If no -> choose mode
 				{
 					clearConsole();
 					switch (generateMenu(midWidth - 12, midHeight + 6, "21,23", "EASY,HARDCORE", 2))
@@ -149,7 +154,7 @@ int main()
 						break;
 					}
 				}
-				else
+				else // If yes -> go straight to the current board
 				{
 					if (temp->easy.isPlaying)
 					{
@@ -177,7 +182,7 @@ int main()
 				showLeaderboard(easy, hard);
 				switch (getConsoleInput())
 				{
-				case 5:
+				case 5: // BACK -> go back to main menu
 					ldboard = false;
 					clearConsole();
 					break;
@@ -196,7 +201,7 @@ int main()
 				showCredits();
 				switch (getConsoleInput())
 				{
-				case 5:
+				case 5: // BACK -> go back to main menu
 					credits = false;
 					clearConsole();
 					break;
@@ -209,6 +214,7 @@ int main()
 		}
 	}
 
+	// Delete and free memory
 	delete temp;
 	deleteList(list);
 	return 0;

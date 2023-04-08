@@ -4,7 +4,7 @@
 // Add node to the back of line
 void addTail(Board_2*& head, Board_2* newnode);
 
-// Find the node in pos [i][j]
+// Find the node in the ith row and the jth column
 Board_2* findNode(Board_2** board, int i, int j);
 
 // Create board
@@ -19,18 +19,18 @@ void displayBoard(Board_2** board, int delaytime);
 bool checkRowMatch(Board_2** board, int j1, int j2, int i);						// |
 bool checkColMatch(Board_2** board, int i1, int i2, int j);						// |
 bool checkIMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);	// |
-bool checkLMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);	// |-> Check 2 points matching
+bool checkLMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);	// |-> Check 2 cells matching
 bool checkZMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);	// |
 bool checkUMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);	// |
 bool checkMatch(Board_2** board, int i1, int j1, int i2, int j2, int type);		// |
 
-// Move the cell to the deleted pos
+// Move the cell to the deleted position
 void moveCell(Board_2** board, int i, int j);
 
 // Check if board is completable
 bool checkValidBoard(Board_2** board);
 
-// Hint
+// Show hint
 void showMoveSuggestion(Board_2** cell, int i, int j);
 
 // Reset if board is uncompletable

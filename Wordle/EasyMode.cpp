@@ -13,16 +13,16 @@ void generateBoard(Board_1** board)
 		for (int j = 0; j < boardEasyWidth; j++)
 		{
 			// Set the position for the cell
-			board[i][j].x = j * cellWidth + midWidth - (boardEasyWidth * cellWidth - 1) / 2;
-			board[i][j].y = i * (cellHeight + 1) + midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2;
+			board[i][j].cell.x = j * cellWidth + midWidth - (boardEasyWidth * cellWidth - 1) / 2;
+			board[i][j].cell.y = i * (cellHeight + 1) + midHeight + 2 - (boardEasyHeight * (cellHeight + 1) - 1) / 2;
 
 			// Set the position for the character
-			board[i][j].cx = board[i][j].x + 2;
-			board[i][j].cy = board[i][j].y + 1;
+			board[i][j].character.x = board[i][j].cell.x + 2;
+			board[i][j].character.y = board[i][j].cell.y + 1;
 		}
 	}
 
-	// Set the edge unavailable
+	// Set the board edge unavailable
 	for (int i = 0; i < boardEasyHeight; i++)
 	{
 		board[i][0].isValid = false;
@@ -78,6 +78,7 @@ void displayBoard(Board_1** board, int delaytime)
 
 bool checkRowMatch(Board_1** board, int j1, int j2, int i)
 {
+	// Check if between 2 cells in a row is clear or if next to each other
 	for (int j = min(j1, j2) + 1; j < max(j1, j2); j++)
 		if (board[i][j].c != ' ')
 			return false;
@@ -86,6 +87,7 @@ bool checkRowMatch(Board_1** board, int j1, int j2, int i)
 
 bool checkColMatch(Board_1** board, int i1, int i2, int j)
 {
+	// Check if between 2 cells in a column is clear or if next to each other
 	for (int i = min(i1, i2) + 1; i < max(i1, i2); i++)
 		if (board[i][j].c != ' ')
 			return false;
@@ -94,13 +96,17 @@ bool checkColMatch(Board_1** board, int i1, int i2, int j)
 
 bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
+	// Check if 2 cells are in the same row or collumn
+	// If so, use the 2 functions above
+
 	if (j1 == j2)
 	{
 		if (checkColMatch(board, i1, i2, j1))
 		{
 			if (type == 0)
 			{
-				board[i1][j1].drawArrow(board[i2][j1].cx, board[i2][j1].cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				board[i1][j1].drawArrow(board[i2][j1].character.x, board[i2][j1].character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int i = min(i1, i2) + 1; i < max(i1, i2); i++)
@@ -116,7 +122,8 @@ bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 		{
 			if (type == 0)
 			{
-				board[i1][j1].drawArrow(board[i1][j2].cx, board[i1][j2].cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				board[i1][j1].drawArrow(board[i1][j2].character.x, board[i1][j2].character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j1, j2) + 1; j < max(j1, j2); j++)
@@ -131,17 +138,18 @@ bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 
 bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
-	// Check 2 corners created by those points 
-	//	-> If through
-	//	-> Check the 2 lines created by that corner to those points
+	// Check 2 corners created by those cells 
+	//	-> If the corners is clear
+	//	-> Check the 2 lines from that corner to those cells
 
 	if (board[i1][j2].c == ' ')
 		if (checkRowMatch(board, j1, j2, i1) && checkColMatch(board, i1, i2, j2))
 		{
 			if (type == 0)
 			{
-				board[i1][j1].drawArrow(board[i1][j2].cx, board[i1][j2].cy, i1, j1, i2, j2);
-				board[i1][j2].drawArrow(board[i2][j2].cx, board[i2][j2].cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				board[i1][j1].drawArrow(board[i1][j2].character.x, board[i1][j2].character.y, i1, j1, i2, j2);
+				board[i1][j2].drawArrow(board[i2][j2].character.x, board[i2][j2].character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j1, j2); j <= max(j1, j2); j++)
@@ -158,8 +166,9 @@ bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 		{
 			if (type == 0)
 			{
-				board[i2][j2].drawArrow(board[i2][j1].cx, board[i2][j1].cy, i1, j1, i2, j2);
-				board[i2][j1].drawArrow(board[i1][j1].cx, board[i1][j1].cy, i1, j1, i2, j2);
+				// Show the arrow for 0,2 seconds
+				board[i2][j2].drawArrow(board[i2][j1].character.x, board[i2][j1].character.y, i1, j1, i2, j2);
+				board[i2][j1].drawArrow(board[i1][j1].character.x, board[i1][j1].character.y, i1, j1, i2, j2);
 				Sleep(200);
 
 				for (int j = min(j2, j1); j <= max(j2, j1); j++)
@@ -176,7 +185,7 @@ bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
 	// Check all way in a rectangle created by p1 and p2
-	// Find the point has min j and the point has min i
+	// Find the cell has min j and the cell has min i to check
 
 	Position jmin, jmax;
 	if (j1 < j2)
@@ -207,9 +216,10 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[jmin.x][jmin.y].drawArrow(board[jmin.x][j].cx, board[jmin.x][j].cy, i1, j1, i2, j2);
-					board[jmin.x][j].drawArrow(board[jmax.x][j].cx, board[jmax.x][j].cy, i1, j1, i2, j2);
-					board[jmax.x][j].drawArrow(board[jmax.x][jmax.y].cx, board[jmax.x][jmax.y].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[jmin.x][jmin.y].drawArrow(board[jmin.x][j].character.x, board[jmin.x][j].character.y, i1, j1, i2, j2);
+					board[jmin.x][j].drawArrow(board[jmax.x][j].character.x, board[jmax.x][j].character.y, i1, j1, i2, j2);
+					board[jmax.x][j].drawArrow(board[jmax.x][jmax.y].character.x, board[jmax.x][jmax.y].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int jd = jmin.y + 1; jd < j; jd++)
@@ -253,9 +263,10 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[imin.x][imin.y].drawArrow(board[i][imin.y].cx, board[i][imin.y].cy, i1, j1, i2, j2);
-					board[i][imin.y].drawArrow(board[i][imax.y].cx, board[i][imax.y].cy, i1, j1, i2, j2);
-					board[imax.x][imax.y].drawArrow(board[i][imax.y].cx, board[i][imax.y].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[imin.x][imin.y].drawArrow(board[i][imin.y].character.x, board[i][imin.y].character.y, i1, j1, i2, j2);
+					board[i][imin.y].drawArrow(board[i][imax.y].character.x, board[i][imax.y].character.y, i1, j1, i2, j2);
+					board[imax.x][imax.y].drawArrow(board[i][imax.y].character.x, board[i][imax.y].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int id = imin.x + 1; id < i; id++)
@@ -275,6 +286,10 @@ bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 
 bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 {
+	// Check if the line of the min pos cell and the cell in same line but have the max pos is clear
+	// If so, check if the 2 next cells is clear
+	// If so, check the line between those cells
+
 	int downright = 1, upleft = -1;
 
 	Position jmin, jmax;
@@ -303,9 +318,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[jmin.x][jnext].drawArrow(board[jmax.x][jnext].cx, board[jmax.x][jnext].cy, i1, j1, i2, j2);
-					board[jmin.x][jmin.y].drawArrow(board[jmin.x][jnext].cx, board[jmin.x][jnext].cy, i1, j1, i2, j2);
-					board[jmax.x][jmax.y].drawArrow(board[jmax.x][jnext].cx, board[jmax.x][jnext].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[jmin.x][jnext].drawArrow(board[jmax.x][jnext].character.x, board[jmax.x][jnext].character.y, i1, j1, i2, j2);
+					board[jmin.x][jmin.y].drawArrow(board[jmin.x][jnext].character.x, board[jmin.x][jnext].character.y, i1, j1, i2, j2);
+					board[jmax.x][jmax.y].drawArrow(board[jmax.x][jnext].character.x, board[jmax.x][jnext].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = min(jmin.x, jmax.x); i <= max(jmin.x, jmax.x); i++)
@@ -332,9 +348,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[jmin.x][jnext].drawArrow(board[jmax.x][jnext].cx, board[jmax.x][jnext].cy, i1, j1, i2, j2);
-					board[jmin.x][jmin.y].drawArrow(board[jmin.x][jnext].cx, board[jmin.x][jnext].cy, i1, j1, i2, j2);
-					board[jmax.x][jmax.y].drawArrow(board[jmax.x][jnext].cx, board[jmax.x][jnext].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[jmin.x][jnext].drawArrow(board[jmax.x][jnext].character.x, board[jmax.x][jnext].character.y, i1, j1, i2, j2);
+					board[jmin.x][jmin.y].drawArrow(board[jmin.x][jnext].character.x, board[jmin.x][jnext].character.y, i1, j1, i2, j2);
+					board[jmax.x][jmax.y].drawArrow(board[jmax.x][jnext].character.x, board[jmax.x][jnext].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = min(jmin.x, jmax.x); i <= max(jmin.x, jmax.x); i++)
@@ -377,9 +394,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[imin.x][imin.y].drawArrow(board[inext][imin.y].cx, board[inext][imin.y].cy, i1, j1, i2, j2);
-					board[imax.x][imax.y].drawArrow(board[inext][imax.y].cx, board[inext][imax.y].cy, i1, j1, i2, j2);
-					board[inext][imin.y].drawArrow(board[inext][imax.y].cx, board[inext][imax.y].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[imin.x][imin.y].drawArrow(board[inext][imin.y].character.x, board[inext][imin.y].character.y, i1, j1, i2, j2);
+					board[imax.x][imax.y].drawArrow(board[inext][imax.y].character.x, board[inext][imax.y].character.y, i1, j1, i2, j2);
+					board[inext][imin.y].drawArrow(board[inext][imax.y].character.x, board[inext][imax.y].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = imin.x + 1; i < inext; i++)
@@ -406,9 +424,10 @@ bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type)
 			{
 				if (type == 0)
 				{
-					board[imin.x][imin.y].drawArrow(board[inext][imin.y].cx, board[inext][imin.y].cy, i1, j1, i2, j2);
-					board[imax.x][imax.y].drawArrow(board[inext][imax.y].cx, board[inext][imax.y].cy, i1, j1, i2, j2);
-					board[inext][imin.y].drawArrow(board[inext][imax.y].cx, board[inext][imax.y].cy, i1, j1, i2, j2);
+					// Show the arrow for 0,2 seconds
+					board[imin.x][imin.y].drawArrow(board[inext][imin.y].character.x, board[inext][imin.y].character.y, i1, j1, i2, j2);
+					board[imax.x][imax.y].drawArrow(board[inext][imax.y].character.x, board[inext][imax.y].character.y, i1, j1, i2, j2);
+					board[inext][imin.y].drawArrow(board[inext][imax.y].character.x, board[inext][imax.y].character.y, i1, j1, i2, j2);
 					Sleep(200);
 
 					for (int i = inext + 1; i < imin.x; i++)
@@ -458,14 +477,16 @@ bool checkValidBoard(Board_1** board)
 		{
 			for (int j = 1; j < easyWidth + 1; j++)
 			{
-				if (board[i][j].c == check && board[i][j].isValid) // Save all the check character positions in pos arr
+				// Find the postion of cells have check character
+				// Save all the positions in a pos array
+				if (board[i][j].c == check && board[i][j].isValid)
 				{
 					pos[cnt++] = i;
 					pos[cnt++] = j;
 				}
 			}
 		}
-		for (int i = 0; i < cnt - 2; i += 2) // Pos arr stores the pos of 1 char in i and i+1;
+		for (int i = 0; i < cnt - 2; i += 2) // Pos arr stores the position of 1 char in i and i+1;
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 				if (checkMatch(board, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Check if there are any ways lefts
@@ -478,17 +499,18 @@ bool checkValidBoard(Board_1** board)
 
 void resetPlayingBoard(Board_1** board, int deletedCount)
 {
-	if (deletedCount == 0)
+	// Check if the game is complete or not
+	if (deletedCount == 0) // If yes -> Set all the cells back to valid
 		for (int i = 1; i < easyHeight + 1; i++)
 			for (int j = 1; j < easyWidth + 1; j++)
 				board[i][j].isValid = true;
-	else
+	else				   // If no -> Set all the valid cell to null
 		for (int i = 1; i < easyHeight + 1; i++)
 			for (int j = 1; j < easyWidth + 1; j++)
 				if (board[i][j].isValid)
 					board[i][j].c = ' ';
 
-
+	// Reset the cell character
 	int restCount = (easyHeight * easyWidth - deletedCount) / 2;
 	while (restCount)
 	{
@@ -519,6 +541,8 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 		{
 			for (int j = 1; j < easyWidth + 1; j++)
 			{
+				// Find the postion of cells have check character
+				// Save all the positions in a pos array
 				if (cell[i][j].c == check && cell[i][j].isValid)
 				{
 					pos[cnt++] = i;
@@ -531,7 +555,8 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 		{
 			for (int j = i + 2; j < cnt; j += 2)
 			{
-				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1)) // Find 2 match cell -> show it 0,2s
+				// Check if 2 cell are matched -> Show it on screen for 0,2s
+				if (checkMatch(cell, pos[i], pos[i + 1], pos[j], pos[j + 1], 1))
 				{
 					cell[pos[i]][pos[i + 1]].isHint = true;
 					cell[pos[j]][pos[j + 1]].isHint = true;
@@ -561,7 +586,7 @@ void showMoveSuggestion(Board_1** cell, int inow, int jnow)
 
 bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, int& deletedCount)
 {
-	p->eboard[i][j].drawCell(); // Set the selected cell;
+	p->eboard[i][j].drawCell(); // Set the status of selected cell;
 	Sleep(200);
 
 	p->eboard[iselected][jselected].isSelected = false;
@@ -569,7 +594,7 @@ bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, 
 
 	bool check = false;
 
-	if (checkMatch(p->eboard, iselected, jselected, i, j, 0)) // If match -> delete cell
+	if (checkMatch(p->eboard, iselected, jselected, i, j, 0)) // Check if 2 cell are matched -> delete cell
 	{
 		if (p->easy.streak < 5)
 			playSound(5);
@@ -582,14 +607,16 @@ bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, 
 		else
 			playSound(9);
 
-		p->eboard[iselected][jselected].deleteCell(7);
-		p->eboard[i][j].deleteCell(7);
-
+		// Set the character of deleted cells back to null
 		p->eboard[iselected][jselected].c = ' ';
 		p->eboard[i][j].c = ' ';
 
+		p->eboard[iselected][jselected].deleteCell(7);
+		p->eboard[i][j].deleteCell(7);
+
 		deletedCount += 2;
 
+		// Check if the board is not valid -> reset the board
 		if (!checkValidBoard(p->eboard) && deletedCount != easyHeight * easyWidth)
 		{
 			do
@@ -611,7 +638,7 @@ bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, 
 		p->eboard[iselected][jselected].drawCell();
 	}
 
-	// When done process -> set the current standing cell
+	// When done process -> set the status of current standing cell
 	p->eboard[i][j].isStopped = true;
 	p->eboard[i][j].drawCell();
 	p->eboard[i][j].isStopped = false;
@@ -621,6 +648,7 @@ bool processSelectedCell(Player* p, int i, int j, int iselected, int jselected, 
 
 void processPoint(Player* p)
 {
+	// The point will increase depends on streak
 	if (p->easy.streak == 0)
 		return;
 	if (p->easy.streak < 5)
@@ -652,11 +680,11 @@ bool processAction(Board_1** cell, Player* p)
 	{
 		if (cell[i][j].isStopped)
 		{
-			cell[oldi][oldj].drawCell(); // Set the previous standing cell back to default
+			cell[oldi][oldj].drawCell(); // Set the status of previous standing cell back to default
 			oldi = i;
 			oldj = j;
 
-			cell[i][j].drawCell(); // Set the current standing cell
+			cell[i][j].drawCell(); // Set the status of current standing cell
 			cell[i][j].isStopped = false;
 		}
 
@@ -669,19 +697,19 @@ bool processAction(Board_1** cell, Player* p)
 			p->easy.isFinised = true;
 			switch (generateMenu(midWidth - 12, midHeight + 6, "21,23,25,27", "CONTINUE WITH CURRENT SCORE,RESTART WITH NEW SCORE,BACK TO MAIN MENU,JUST QUIT", 4))
 			{
-			case 0: // If quit and don't save
+			case 0: // JUST QUIT -> delete board and reset point
 				p->easy.isPlaying = false;
 				deleteBoard(p->eboard);
 				clearConsole();
 				return false;
-			case 1: // If continue playing with the current parameter
+			case 1: // CONTINUE -> reset new board
 				p->easy.isPlaying = true;
 				return true;
-			case 2: // If continue playing with new parameter
+			case 2: // RESTART -> delete board and create new
 				p->easy.isPlaying = false;
 				deleteBoard(p->eboard);
 				return true;
-			case 3: // If quit and save parameter
+			case 3: // SAVE AND MAIN MENU -> save and out
 				p->easy.isPlaying = true;
 				clearConsole();
 				return false;
@@ -726,7 +754,7 @@ bool processAction(Board_1** cell, Player* p)
 			cell[i][j].isStopped = true;
 			break;
 		}
-		case 5:
+		case 5: // SPACE or ENTER -> select a cell
 		{
 			// If a cell is valid and not selected
 			if (!cell[i][j].isSelected && cell[i][j].isValid)
@@ -767,7 +795,7 @@ bool processAction(Board_1** cell, Player* p)
 			}
 			break;
 		}
-		case 6:
+		case 6: // H -> show hint if valid
 		{
 			if (p->easy.hint)
 			{
@@ -776,7 +804,7 @@ bool processAction(Board_1** cell, Player* p)
 			}
 			break;
 		}
-		case 7: // If ESC is pressed
+		case 7: // ESC
 		{
 			clearConsole();
 			bool pause = true;
@@ -784,7 +812,7 @@ bool processAction(Board_1** cell, Player* p)
 			{
 				switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "RESUME,RESTART,QUIT", 3))
 				{
-				case 0: // If QUIT is selected
+				case 0: // QUIT -> save or not save
 					switch (generateMenu(midWidth - 12, midHeight + 7, "22,24,26", "SAVE,DON'T SAVE,BACK", 3))
 					{
 					case 0: // BACK
@@ -792,19 +820,19 @@ bool processAction(Board_1** cell, Player* p)
 					case 1: // SAVE
 						p->easy.isPlaying = true;
 						return false;
-					case 3: // DON'T SAVE
+					case 3: // DON'T SAVE -> delete board
 						p->easy.isPlaying = false;
 						deleteBoard(p->eboard);
 						return false;
 					}
 					break;
-				case 1: // If RESUME -> go back
+				case 1: // RESUME -> go back
 					pause = false;
 					cell[i][j].isStopped = true;
 					displayBoard(p->eboard, 0);
 					showParameter(p, "easy");
 					break;
-				case 3: // If RESTART -> delete
+				case 3: // RESTART -> delete board and create new
 					p->easy.isPlaying = false;
 					deleteBoard(p->eboard);
 					return true;
@@ -815,6 +843,7 @@ bool processAction(Board_1** cell, Player* p)
 			break;
 		}
 
+		// Update parameter after an action
 		showParameter(p, "easy");
 	}
 }
@@ -827,7 +856,7 @@ void easyMode(Player* p, int height, int width)
 	boardEasyWidth = easyWidth + 2;
 
 	srand(time(NULL));
-	// If player want to continue playing
+	// A loop for continue playing
 	do
 	{
 		// Check if the board is being played or not

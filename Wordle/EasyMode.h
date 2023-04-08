@@ -13,7 +13,7 @@ void displayBoard(Board_1** board, int delaytime);
 bool checkRowMatch(Board_1** board, int j1, int j2, int i);						// |
 bool checkColMatch(Board_1** board, int i1, int i2, int j);						// |
 bool checkIMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);	// |
-bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);	// |-> Check 2 points matching
+bool checkLMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);	// |-> Check 2 cells matching
 bool checkZMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);	// |
 bool checkUMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);	// |
 bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);		// |
@@ -21,7 +21,7 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);		// 
 // Check if board is completable
 bool checkValidBoard(Board_1** board);
 
-// Hint
+// Show hint
 void showMoveSuggestion(Board_1** cell, int i, int j);
 
 // Reset if board is uncompletable
