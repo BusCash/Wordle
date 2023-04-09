@@ -144,6 +144,7 @@ int getConsoleInput()
 		else if (key == ESC)
 			return 7;
 	}
+	return -1;
 }
 
 void changeBarStatus(int barX, string barY, int moveY, string s, int bColor, int tColor)
