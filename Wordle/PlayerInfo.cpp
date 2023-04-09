@@ -272,7 +272,60 @@ Player* sortRank(Player* list, string mode)
 	return list;
 }
 
-void showLeaderboard(Player* easy, Player* hard)
+void showRank(Player* list, string mode)
+{
+	if (mode == "easy")
+	{
+		if (list != NULL)
+		{
+			int top3 = 3;
+			int i = 1;
+			for (Player* curnode = list; curnode != NULL; curnode = curnode->next)
+			{
+				if (top3 == 3)
+					setColor(6);
+				else if (top3 == 2)
+					setColor(4);
+				else if (top3 == 1)
+					setColor(15);
+				else setColor(8);
+				gotoxy(7, 5 + i);
+				cout << curnode->name;
+				gotoxy(midWidth / 2 + 10, 5 + i);
+				cout << curnode->easy.maxpoint;
+				top3--;
+				i++;
+			}
+		}
+	}
+	else if (mode == "hard")
+	{
+		if (list != NULL)
+		{
+			int top3 = 3;
+			int i = 1;
+			for (Player* curnode = list; curnode != NULL; curnode = curnode->next)
+			{
+				if (top3 == 3)
+					setColor(6);
+				else if (top3 == 2)
+					setColor(4);
+				else if (top3 == 1)
+					setColor(15);
+				else setColor(8);
+				gotoxy(midWidth + 8, 5 + i);
+				cout << curnode->name;
+				gotoxy(midWidth + midWidth / 2 + 10, 5 + i);
+				cout << curnode->hard.maxpoint;
+				top3--;
+				i++;
+			}
+		}
+	}
+
+}
+
+void showLeaderboard(Player* list)
 {
 	gotoxy(midWidth / 2 - 1, 3);
 	setColor(11);
@@ -295,49 +348,9 @@ void showLeaderboard(Player* easy, Player* hard)
 		cout << char(206);
 	}
 
-	if (easy != NULL)
-	{
-		int top3 = 3;
-		int i = 1;
-		for (Player* curnode = easy; curnode != NULL; curnode = curnode->next)
-		{
-			if (top3 == 3)
-				setColor(6);
-			else if (top3 == 2)
-				setColor(4);
-			else if (top3 == 1)
-				setColor(15);
-			else setColor(8);
-			gotoxy(7, 5 + i);
-			cout << curnode->name;
-			gotoxy(midWidth / 2 + 10, 5 + i);
-			cout << curnode->easy.maxpoint;
-			top3--;
-			i++;
-		}
-	}
+	showRank(sortRank(list, "easy"), "easy");
+	showRank(sortRank(list, "hard"), "hard");
 
-	if (hard != NULL)
-	{
-		int top3 = 3;
-		int i = 1;
-		for (Player* curnode = hard; curnode != NULL; curnode = curnode->next)
-		{
-			if (top3 == 3)
-				setColor(6);
-			else if (top3 == 2)
-				setColor(4);
-			else if (top3 == 1)
-				setColor(15);
-			else setColor(8);
-			gotoxy(midWidth + 8, 5 + i);
-			cout << curnode->name;
-			gotoxy(midWidth + midWidth / 2 + 10, 5 + i);
-			cout << curnode->hard.maxpoint;
-			top3--;
-			i++;
-		}
-	}
 	setColor(109);
 	gotoxy(midWidth - 12, midHeight + 15);
 	cout << "          BACK          ";

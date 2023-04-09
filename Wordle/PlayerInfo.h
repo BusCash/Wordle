@@ -26,5 +26,8 @@ void showWordDisplayEffect(string s);
 // Sort the list of players by highest score
 Player* sortRank(Player* list, string mode);
 
+// Show the rank order in a specific mode
+void showRank(Player* list, string mode);
+
 // Display the leaderboard
-void showLeaderboard(Player* easy, Player* hard);
+void showLeaderboard(Player* list);

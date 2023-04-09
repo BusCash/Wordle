@@ -172,14 +172,11 @@ int main()
 		}
 		case 2: // LEADERBOARD
 		{
-			Player* easy = sortRank(list, "easy");
-			Player* hard = sortRank(list, "hard");
 			clearConsole();
-
 			bool ldboard = true;
 			while (ldboard)
 			{
-				showLeaderboard(easy, hard);
+				showLeaderboard(list);
 				switch (getConsoleInput())
 				{
 				case 5: // BACK -> go back to main menu
