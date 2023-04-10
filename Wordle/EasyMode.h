@@ -22,7 +22,7 @@ bool checkMatch(Board_1** board, int i1, int j1, int i2, int j2, int type);		// 
 bool checkValidBoard(Board_1** board);
 
 // Show hint
-void showMoveSuggestion(Board_1** cell, int i, int j);
+void showMoveSuggestion(Board_1** cell, int inow, int jnow);
 
 // Reset if board is uncompletable
 void resetPlayingBoard(Board_1** board, int deletedCount);

@@ -31,7 +31,7 @@ void moveCell(Board_2** board, int i, int j);
 bool checkValidBoard(Board_2** board);
 
 // Show hint
-void showMoveSuggestion(Board_2** cell, int i, int j);
+void showMoveSuggestion(Board_2** cell, int inow, int jnow);
 
 // Reset if board is uncompletable
 void resetPlayingBoard(Board_2** board);
