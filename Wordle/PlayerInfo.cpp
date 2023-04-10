@@ -278,9 +278,10 @@ void showRank(Player* list, string mode)
 	{
 		if (list != NULL)
 		{
+			int max = 20;
 			int top3 = 3;
 			int i = 1;
-			for (Player* curnode = list; curnode != NULL; curnode = curnode->next)
+			for (Player* curnode = list; curnode != NULL && max > 0; curnode = curnode->next)
 			{
 				if (top3 == 3)
 					setColor(6);
@@ -295,6 +296,7 @@ void showRank(Player* list, string mode)
 				cout << curnode->easy.maxpoint;
 				top3--;
 				i++;
+				max--;
 			}
 		}
 	}
@@ -302,9 +304,10 @@ void showRank(Player* list, string mode)
 	{
 		if (list != NULL)
 		{
+			int max = 20;
 			int top3 = 3;
 			int i = 1;
-			for (Player* curnode = list; curnode != NULL; curnode = curnode->next)
+			for (Player* curnode = list; curnode != NULL && max > 0; curnode = curnode->next)
 			{
 				if (top3 == 3)
 					setColor(6);
@@ -319,6 +322,7 @@ void showRank(Player* list, string mode)
 				cout << curnode->hard.maxpoint;
 				top3--;
 				i++;
+				max--;
 			}
 		}
 	}
